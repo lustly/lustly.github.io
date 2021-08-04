@@ -8,14 +8,14 @@ setInterval(function(){
 "|lusts|",
 "|lustst|",
 "|luststa|",
-" |luststar|",
-"  |luststa|",
-"   |lustst|",
-"    |lusts|",
-"    |lust|",
-"    |lus|",
-"    |lu|",
-"    |l|",
+"|luststar|",
+"|luststa|",
+"|lustst|",
+"|lusts|",
+"|lust|",
+"|lus|",
+"|lu|",
+"|l|",
 ]
 
     if(i===titles.length) {
