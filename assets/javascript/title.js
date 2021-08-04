@@ -5,14 +5,17 @@ setInterval(function(){
 "|lu|",
 "|lus|",
 "|lust|",
-"|lusta|",
-"|lustar|",
-"|lusta|",
-" |lust|",
-"  |lus|",
-"   |lu|",
+"|lusts|",
+"|lustst|",
+"|luststa|",
+" |luststar|",
+"  |luststa|",
+"   |lustst|",
+"    |lusts|",
+"    |lust|",
+"    |lus|",
+"    |lu|",
 "    |l|",
-
 ]
 
     if(i===titles.length) {
