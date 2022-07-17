@@ -1,3 +1,6 @@
-don't try and steal my shit ill find you goofy ass jit
+my personal website project.
+learning html/ccs i guess ^_^
+https://luststar.club
 
-make your own website.
+[please don't fork or steal my project without at least asking me: luststar#0008]
+
