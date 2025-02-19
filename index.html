@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>luststar &lt;3</title>
+    <!-- Facebook Meta Tags -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="luststar">
     <meta property="og:description" content="luststar's official links">
@@ -12,146 +13,87 @@
     <meta property="og:image" content="https://cdn.discordapp.com/attachments/852613805317816340/997885029466243162/How.gif">
 
     <link rel="SHORTCUT ICON" href="img/favicon.png" type="Logo">
-    <link rel="ICON" href="img/favicon.png" type="Logo">
+    <link rel="ICON" href="img/favicon.png" type="Logo"> 
+    <link rel="shortcut icon" type="image/png" href="">
     <link rel="stylesheet" href="css/style.css">
 
-    <script src="https://www.ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.html"></script>
-    <script src="glitch.jquery.html"></script>
+    <script src="https://www.ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+    <script src="glitch.jquery.js"></script>
     <script src="http://www.youtube.com/iframe_api"></script>
-
+    
     <style>
-        /* General Reset */
-        html,
+        /* Set up the background gif */
         body {
             margin: 0;
             padding: 0;
             overflow: hidden;
+            background-image: url('img/How.gif');  /* Reference local gif in img folder */
+            background-size: cover;
+            background-position: center;
             height: 100%;
         }
 
-        /* Background Video */
-        #background-video {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            z-index: -1;
-        }
-
-        /* Centered Content Container */
+        /* Container for links and music toggle */
         #screen {
+            text-align: center;
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            text-align: center;
-            padding: 20px;
-            color: white;
-            font-size: 1.2em;
-            z-index: 9999;
+            z-index: 999;
+            color: #fff;
         }
 
-        /* Links styling */
-        #screen a {
-            display: block;
-            color: #B2CCFF;
+        /* Style the font size of the links */
+        #screen font {
+            font-size: 22px;
+        }
+
+        a {
+            color: #fff;
+            font-size: 18px;
             text-decoration: none;
-            margin: 10px 0;
-            font-size: 1.1em;
         }
 
-        #screen a:hover {
+        a:hover {
             text-decoration: underline;
         }
 
-        /* Music Toggle Button */
-        .music-toggle {
-            margin-top: 20px;
-        }
-
+        /* Music toggle button */
         .music-toggle a {
-            color: #fff;
-            background-color: #B2CCFF;
+            display: inline-block;
             padding: 10px;
-            text-decoration: none;
+            background-color: #000;
+            color: #fff;
+            font-size: 18px;
+            text-align: center;
+            cursor: pointer;
+            margin-top: 15px;
             border-radius: 5px;
         }
 
-        /* Fallback Image for Mobile Devices */
-        @media only screen and (max-width: 768px) {
-            #background-video {
-                display: none;
-            }
-
-            /* Static background for mobile */
-            body {
-                background: url('img/your_fallback_image.jpg') no-repeat center center fixed;
-                background-size: cover;
-            }
-
-            .content {
-                color: white;
-                font-size: 1.5em;
-            }
+        .music-toggle a:hover {
+            background-color: #444;
         }
 
-        /* Dialog Box Styling (Red Box) */
-        #smgm_bgdiv {
-            text-align: center;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 9991;
-            width: 100%;
-            height: 100%;
-            background-color: red;
-            opacity: 0.7;
-            display: block;
-            visibility: visible;
-        }
-
-        #smgm_dialogbox {
-            vertical-align: middle;
+        /* Footer or content at the bottom */
+        .content {
+            position: absolute;
+            bottom: 20px;
             left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            border: 3px solid #000 !important;
-            text-align: center !important;
-            background-color: #fff !important;
-            color: #000 !important;
-            font-family: Arial, Verdana, sans-serif !important;
-            z-index: 9999;
-            position: fixed;
-            width: 60%;
-            max-width: 500px; /* Ensures it doesn't get too wide on larger screens */
-            height: auto;
-            padding: 20px;
-            margin-left: auto;
-            margin-right: auto;
+            transform: translateX(-50%);
+            color: #f1f1f1;
+            font-size: 14px;
         }
 
-        /* Responsive adjustments for very small screens */
-        @media only screen and (max-width: 480px) {
-            #screen {
-                font-size: 1em; /* Slightly smaller text for small screens */
-                padding: 10px;
-            }
-
-            #screen a {
-                font-size: 1em; /* Adjust link size */
-            }
+        /* Style for the music player toggle */
+        audio {
+            display: none;
         }
     </style>
 </head>
 
 <body>
-
-    <!-- Background Video -->
-    <video id="background-video" autoplay loop muted>
-        <source src="img/How.mp4" type="video/mp4">
-    </video>
 
     <div id="screen">
         <font size="5">lust.lol // luststar.club</font>
@@ -162,7 +104,7 @@
         <a href="https://open.spotify.com/artist/4bP1qxGv79uyiXuUWfJew4?si=4d3abb9c525941e9" target="_blank">spotify</a><br>
         <a href="https://music.apple.com/us/artist/luststar/1527972241" target="_blank">apple music</a><br>
         <a href="https://t.me/luststar" target="_blank">telegram</a><br>
-
+        
         <hr>
         <div class="music-toggle">
             <a onclick="togglePlay()" id="toggle" data-text-swap="Click to turn music off" data-text-original="Music off">Click to listen to a banger!</a>
@@ -173,8 +115,7 @@
     <p class="content">
         UPDATE: on vacation, slow response times expected.
         <br><br>
-        the background video will not work on mobile devices.
-        <br><br>
+        the background will not work well on older mobile devices.
     </p>
 
     <script>
@@ -188,19 +129,20 @@
             } else {
                 music.play();
             }
-        };
+        }
 
-        music.onplaying = function () {
+        music.onplaying = function() {
             isPlaying = true;
             document.getElementById("music-animation").classList.add('on')
         };
-        music.onpause = function () {
+
+        music.onpause = function() {
             isPlaying = false;
             document.getElementById("music-animation").classList.remove('on')
         };
 
         var button = document.getElementById("toggle");
-        button.addEventListener('click', function () {
+        button.addEventListener('click', function() {
             if (button.getAttribute("data-text-swap") == button.innerHTML) {
                 button.innerHTML = button.getAttribute("data-text-original");
             } else {
