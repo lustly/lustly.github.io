@@ -18,43 +18,55 @@
     <script src="https://www.ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.html"></script>
     <script src="glitch.jquery.html"></script>
     <script src="http://www.youtube.com/iframe_api"></script>
+
     <style>
-        /* Video Background Styling */
+        /* General Reset */
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            height: 100%;
+        }
+
+        /* Background Video */
         #background-video {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Ensures the video covers the whole screen without stretching */
+            object-fit: cover;
             z-index: -1;
         }
 
-        /* Make sure the video is muted and autoplay */
-        video {
-            object-fit: cover;
-            width: 100%;
-            height: 100%;
-        }
-
-        /* Hide any unnecessary overflow */
-        html, body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-        }
-
-        /* Content Styling */
+        /* Centered Content Container */
         #screen {
-            position: relative;
-            z-index: 9999;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             text-align: center;
             padding: 20px;
             color: white;
             font-size: 1.2em;
+            z-index: 9999;
         }
 
-        /* Music Button Styling */
+        /* Links styling */
+        #screen a {
+            display: block;
+            color: #B2CCFF;
+            text-decoration: none;
+            margin: 10px 0;
+            font-size: 1.1em;
+        }
+
+        #screen a:hover {
+            text-decoration: underline;
+        }
+
+        /* Music Toggle Button */
         .music-toggle {
             margin-top: 20px;
         }
@@ -85,14 +97,51 @@
             }
         }
 
-        /* Text and links styling */
-        .content a {
-            color: #B2CCFF;
-            text-decoration: none;
+        /* Dialog Box Styling (Red Box) */
+        #smgm_bgdiv {
+            text-align: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 9991;
+            width: 100%;
+            height: 100%;
+            background-color: red;
+            opacity: 0.7;
+            display: block;
+            visibility: visible;
         }
 
-        .content a:hover {
-            text-decoration: underline;
+        #smgm_dialogbox {
+            vertical-align: middle;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            border: 3px solid #000 !important;
+            text-align: center !important;
+            background-color: #fff !important;
+            color: #000 !important;
+            font-family: Arial, Verdana, sans-serif !important;
+            z-index: 9999;
+            position: fixed;
+            width: 60%;
+            max-width: 500px; /* Ensures it doesn't get too wide on larger screens */
+            height: auto;
+            padding: 20px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Responsive adjustments for very small screens */
+        @media only screen and (max-width: 480px) {
+            #screen {
+                font-size: 1em; /* Slightly smaller text for small screens */
+                padding: 10px;
+            }
+
+            #screen a {
+                font-size: 1em; /* Adjust link size */
+            }
         }
     </style>
 </head>
@@ -141,17 +190,17 @@
             }
         };
 
-        music.onplaying = function() {
+        music.onplaying = function () {
             isPlaying = true;
             document.getElementById("music-animation").classList.add('on')
         };
-        music.onpause = function() {
+        music.onpause = function () {
             isPlaying = false;
             document.getElementById("music-animation").classList.remove('on')
         };
 
         var button = document.getElementById("toggle");
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
             if (button.getAttribute("data-text-swap") == button.innerHTML) {
                 button.innerHTML = button.getAttribute("data-text-original");
             } else {
