@@ -14,16 +14,17 @@
     color: white;
   }
 
+  /* Container for horizontal links at top center */
   #links {
     position: fixed;
-    top: 50%;
-    left: 20px;
-    transform: translateY(-50%);
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
     display: flex;
-    flex-direction: column;
-    gap: 12px;
-    font-size: 20px;
+    gap: 40px;
+    font-size: 22px;
     font-weight: 700;
+    user-select: none;
   }
 
   #links a {
@@ -36,6 +37,7 @@
     animation-duration: 0.5s;
   }
 
+  /* Stagger fadeIn for horizontal links */
   #links a:nth-child(1) { animation-delay: 0.2s; }
   #links a:nth-child(2) { animation-delay: 0.5s; }
   #links a:nth-child(3) { animation-delay: 0.8s; }
@@ -94,6 +96,15 @@
       opacity: 1;
     }
   }
+
+  /* Responsive tweaks */
+  @media (max-width: 600px) {
+    #links {
+      font-size: 18px;
+      gap: 20px;
+      top: 15px;
+    }
+  }
 </style>
 </head>
 <body>
@@ -141,7 +152,6 @@
     updateButton();
   });
 
-  // Set initial button state
   updateButton();
 </script>
 
