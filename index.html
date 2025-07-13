@@ -5,19 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>luststar &lt;3</title>
 <style>
-  body {
+  body, html {
     margin: 0;
     padding: 0;
+    height: 100%;
     overflow: hidden;
     background-image: url('img/How.gif');
     background-size: cover;
     background-position: center;
-    height: 100vh;
-    font-family: monospace, monospace;
-    color: #fff;
-    text-shadow: 0 0 5px rgba(0,0,0,0.8);
+    font-family: 'Courier New', Courier, monospace;
+    color: white;
   }
 
+  /* Links container vertically centered on left side */
   #links {
     position: fixed;
     top: 50%;
@@ -25,48 +25,41 @@
     transform: translateY(-50%);
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 12px;
+    font-size: 18px;
+    font-weight: 700;
   }
 
-  #links a, #links .music-toggle {
+  /* Individual link animations */
+  #links a, #links .music-toggle a {
+    color: white;
+    text-decoration: none;
     opacity: 0;
-    transform: translateX(-20px);
+    transform: translateY(10px);
     animation-fill-mode: forwards;
-    animation-name: fadeInSlide;
+    animation-name: fadeInUp;
     animation-duration: 0.5s;
   }
 
-  /* stagger delays */
+  /* Staggered animation delays */
   #links a:nth-child(1) { animation-delay: 0.2s; }
-  #links a:nth-child(2) { animation-delay: 0.4s; }
-  #links a:nth-child(3) { animation-delay: 0.6s; }
-  #links a:nth-child(4) { animation-delay: 0.8s; }
-  #links a:nth-child(5) { animation-delay: 1s; }
-  #links a:nth-child(6) { animation-delay: 1.2s; }
-  #links a:nth-child(7) { animation-delay: 1.4s; }
-  #links .music-toggle { animation-delay: 1.6s; }
+  #links a:nth-child(2) { animation-delay: 0.5s; }
+  #links a:nth-child(3) { animation-delay: 0.8s; }
+  #links a:nth-child(4) { animation-delay: 1.1s; }
+  #links a:nth-child(5) { animation-delay: 1.4s; }
+  #links a:nth-child(6) { animation-delay: 1.7s; }
+  #links a:nth-child(7) { animation-delay: 2.0s; }
+  #links .music-toggle a { animation-delay: 2.3s; }
 
-  @keyframes fadeInSlide {
+  @keyframes fadeInUp {
     to {
       opacity: 1;
-      transform: translateX(0);
+      transform: translateY(0);
     }
   }
 
-  a {
-    color: #fff;
-    text-decoration: none;
-    font-size: 18px;
-  }
-  a:hover {
+  #links a:hover, #links .music-toggle a:hover {
     text-decoration: underline;
-  }
-
-  .music-toggle a {
-    background: transparent;
-    border: none;
-    padding: 6px 8px;
-    font-family: monospace, monospace;
     cursor: pointer;
   }
 
@@ -85,76 +78,71 @@
     display: none;
   }
 
+  /* Responsive for small screens */
   @media (max-width: 600px) {
     #links {
       left: 10px;
-      gap: 6px;
-    }
-    a {
       font-size: 16px;
+      gap: 8px;
     }
   }
 </style>
 </head>
 <body>
-  <div id="links">
-    <a href="https://youtube.com/luststar" target="_blank">youtube</a>
-    <a href="https://twitch.tv/luststar" target="_blank">twitch</a>
-    <a href="https://discord.com/users/852610425005932564" target="_blank">discord: @luststar</a>
-    <a href="https://open.spotify.com/artist/4bP1qxGv79uyiXuUWfJew4?si=4d3abb9c525941e9" target="_blank">spotify</a>
-    <a href="https://music.apple.com/us/artist/luststar/1527972241" target="_blank">apple music</a>
-    <a href="https://t.me/luststar" target="_blank">telegram</a>
-    <a href="https://instagram.com/theluststar" target="_blank">instagram</a>
-    <div class="music-toggle">
-      <a onclick="togglePlay()" id="toggle" data-text-swap="click to turn off music" data-text-original="click to turn on music">click to turn on music</a>
-    </div>
+
+<div id="links">
+  <a href="https://youtube.com/luststar" target="_blank" rel="noopener noreferrer">youtube</a>
+  <a href="https://twitch.tv/luststar" target="_blank" rel="noopener noreferrer">twitch</a>
+  <a href="https://discord.com/users/852610425005932564" target="_blank" rel="noopener noreferrer">discord: @luststar</a>
+  <a href="https://open.spotify.com/artist/4bP1qxGv79uyiXuUWfJew4?si=4d3abb9c525941e9" target="_blank" rel="noopener noreferrer">spotify</a>
+  <a href="https://music.apple.com/us/artist/luststar/1527972241" target="_blank" rel="noopener noreferrer">apple music</a>
+  <a href="https://t.me/luststar" target="_blank" rel="noopener noreferrer">telegram</a>
+  <a href="https://instagram.com/theluststar" target="_blank" rel="noopener noreferrer">instagram</a>
+  <div class="music-toggle">
+    <a onclick="togglePlay()" id="toggle" data-text-swap="click to turn off music" data-text-original="click to turn on music">click to turn on music</a>
   </div>
+</div>
 
-  <p class="content">
-    update: i respond fastest on discord.<br /><br />
-    rest in peace @luststarclub on instagram
-  </p>
+<p class="content">
+  update: i respond fastest on discord.<br><br>
+  rest in peace @luststarclub on instagram
+</p>
 
-  <audio id="music" loop src="audio/Music.mp3" volume="0.2"></audio>
+<audio id="music" loop src="audio/Music.mp3"></audio>
 
-  <script>
-    const music = document.getElementById('music');
-    let isPlaying = false;
+<script>
+  const music = document.getElementById("music");
+  const toggleBtn = document.getElementById("toggle");
+  let isPlaying = false;
+  music.volume = 0.2;
 
-    function togglePlay() {
-      if (isPlaying) {
-        music.pause();
-      } else {
-        music.play();
-      }
+  function togglePlay() {
+    if (isPlaying) {
+      music.pause();
+    } else {
+      music.play();
     }
+  }
 
-    music.onplaying = () => {
-      isPlaying = true;
-      toggleBtnText('off');
-    };
-    music.onpause = () => {
-      isPlaying = false;
-      toggleBtnText('on');
-    };
+  music.onplaying = function() {
+    isPlaying = true;
+    toggleBtn.textContent = toggleBtn.getAttribute("data-text-swap");
+  };
 
-    const toggleBtn = document.getElementById('toggle');
-    toggleBtn.addEventListener('click', () => {
-      if (toggleBtn.textContent === toggleBtn.getAttribute('data-text-swap')) {
-        toggleBtn.textContent = toggleBtn.getAttribute('data-text-original');
-      } else {
-        toggleBtn.setAttribute('data-text-original', toggleBtn.textContent);
-        toggleBtn.textContent = toggleBtn.getAttribute('data-text-swap');
-      }
-    });
+  music.onpause = function() {
+    isPlaying = false;
+    toggleBtn.textContent = toggleBtn.getAttribute("data-text-original");
+  };
 
-    function toggleBtnText(state) {
-      if(state === 'on'){
-        toggleBtn.textContent = 'click to turn on music';
-      } else {
-        toggleBtn.textContent = 'click to turn off music';
-      }
+  toggleBtn.addEventListener('click', function() {
+    if (toggleBtn.innerHTML === toggleBtn.getAttribute("data-text-swap")) {
+      toggleBtn.innerHTML = toggleBtn.getAttribute("data-text-original");
+    } else {
+      toggleBtn.setAttribute("data-text-original", toggleBtn.innerHTML);
+      toggleBtn.innerHTML = toggleBtn.getAttribute("data-text-swap");
     }
-  </script>
+  });
+</script>
+
 </body>
 </html>
