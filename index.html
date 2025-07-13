@@ -6,10 +6,7 @@
 <title>luststar &lt;3</title>
 <style>
   body, html {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    overflow: hidden;
+    margin: 0; padding: 0; height: 100%; overflow: hidden;
     background-image: url('img/How.gif');
     background-size: cover;
     background-position: center;
@@ -17,7 +14,6 @@
     color: white;
   }
 
-  /* Links container vertically centered on left side */
   #links {
     position: fixed;
     top: 50%;
@@ -26,11 +22,10 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 700;
   }
 
-  /* Individual link animations */
   #links a {
     color: white;
     text-decoration: none;
@@ -41,7 +36,6 @@
     animation-duration: 0.5s;
   }
 
-  /* Staggered animation delays */
   #links a:nth-child(1) { animation-delay: 0.2s; }
   #links a:nth-child(2) { animation-delay: 0.5s; }
   #links a:nth-child(3) { animation-delay: 0.8s; }
@@ -67,90 +61,38 @@
     display: none;
   }
 
-  /* Responsive for small screens */
-  @media (max-width: 600px) {
-    #links {
-      left: 10px;
-      font-size: 16px;
-      gap: 8px;
-    }
-  }
-
-  /* Volume control container, vertical slider top right */
-  #volume-control {
+  /* Mute button top-right */
+  #mute-button {
     position: fixed;
     top: 15px;
     right: 15px;
+    width: 38px;
+    height: 38px;
     background: rgba(0, 0, 0, 0.15);
-    padding: 8px;
-    border-radius: 12px;
+    border-radius: 50%;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
     display: flex;
     align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease;
+    user-select: none;
     opacity: 0;
     animation: fadeIn 1s forwards;
     animation-delay: 2.5s;
     z-index: 1000;
+  }
+  #mute-button:hover, #mute-button:focus {
+    background: rgba(0,0,0,0.35);
+    outline: none;
   }
 
   @keyframes fadeIn {
     to {
       opacity: 1;
     }
-  }
-
-  /* Vertical slider styles */
-  #volume-slider {
-    -webkit-appearance: none;
-    width: 6px;
-    height: 100px;
-    background: rgba(255, 255, 255, 0.25);
-    border-radius: 4px;
-    cursor: pointer;
-    writing-mode: bt-lr; /* vertical bottom-to-top */
-    transform: rotate(180deg); /* so that bottom=0, top=1 */
-  }
-
-  /* WebKit slider thumb */
-  #volume-slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    height: 16px;
-    width: 16px;
-    background: white;
-    cursor: pointer;
-    border-radius: 50%;
-    box-shadow: 0 0 6px rgba(255,255,255,0.8);
-    transition: background 0.3s ease;
-    margin-top: -6px; /* center on track */
-  }
-  #volume-slider::-webkit-slider-thumb:hover {
-    background: #ddd;
-  }
-
-  /* Firefox slider thumb */
-  #volume-slider::-moz-range-thumb {
-    height: 16px;
-    width: 16px;
-    background: white;
-    cursor: pointer;
-    border-radius: 50%;
-    box-shadow: 0 0 6px rgba(255,255,255,0.8);
-    transition: background 0.3s ease;
-  }
-  #volume-slider::-moz-range-thumb:hover {
-    background: #ddd;
-  }
-
-  /* Track styling */
-  #volume-slider::-webkit-slider-runnable-track {
-    height: 100px;
-    background: rgba(255, 255, 255, 0.25);
-    border-radius: 4px;
-  }
-  #volume-slider::-moz-range-track {
-    height: 100px;
-    background: rgba(255, 255, 255, 0.25);
-    border-radius: 4px;
   }
 </style>
 </head>
@@ -166,46 +108,41 @@
   <a href="https://instagram.com/theluststar" target="_blank" rel="noopener noreferrer">instagram</a>
 </div>
 
-<!-- Volume control slider top right, vertical -->
-<div id="volume-control" title="Volume control (0 = mute)">
-  <input
-    type="range"
-    id="volume-slider"
-    min="0"
-    max="1"
-    step="0.01"
-    value="0.2"
-    aria-label="Music volume"
-  />
-</div>
+<button id="mute-button" aria-label="Mute/unmute music" title="Mute/unmute music" aria-pressed="false">🔈</button>
 
 <audio id="music" loop src="audio/Music.mp3"></audio>
 
 <script>
   const music = document.getElementById('music');
-  const volumeSlider = document.getElementById('volume-slider');
-  let isPlaying = false;
+  const muteBtn = document.getElementById('mute-button');
 
-  // Initialize volume and play/pause accordingly
-  music.volume = volumeSlider.value;
-  if (music.volume > 0) {
-    music.play();
-    isPlaying = true;
+  music.volume = 0.2;
+  music.play();
+
+  function updateButton() {
+    if (music.muted || music.volume === 0) {
+      muteBtn.textContent = '🔇';
+      muteBtn.setAttribute('aria-pressed', 'true');
+    } else {
+      muteBtn.textContent = '🔈';
+      muteBtn.setAttribute('aria-pressed', 'false');
+    }
   }
 
-  volumeSlider.addEventListener('input', (e) => {
-    const vol = parseFloat(e.target.value);
-    music.volume = vol;
-    if (vol === 0) {
-      music.pause();
-      isPlaying = false;
+  muteBtn.addEventListener('click', () => {
+    if (music.muted || music.volume === 0) {
+      music.muted = false;
+      if (music.volume === 0) music.volume = 0.2;
+      music.play();
     } else {
-      if (!isPlaying) {
-        music.play();
-        isPlaying = true;
-      }
+      music.muted = true;
+      music.pause();
     }
+    updateButton();
   });
+
+  // Set initial button state
+  updateButton();
 </script>
 
 </body>
