@@ -42,7 +42,7 @@
       transform: translateY(10px);
       animation:
         fadeInUp 0.6s ease forwards,
-        crtFlicker 2.2s infinite;
+        crtFlicker 2s infinite;
       text-shadow:
         0 0 5px #7FFF00,
         0 0 10px #32CD32,
@@ -50,7 +50,6 @@
         0 0 20px #00FF00;
     }
 
-    /* Staggered fade-in delays */
     #links a:nth-child(1) { animation-delay: 0.2s, 0s; }
     #links a:nth-child(2) { animation-delay: 0.5s, 0s; }
     #links a:nth-child(3) { animation-delay: 0.8s, 0s; }
@@ -98,7 +97,8 @@
       }
     }
 
-    #links a:hover, #links a:focus {
+    #links a:hover,
+    #links a:focus {
       text-decoration: underline;
       cursor: pointer;
       outline: none;
@@ -106,7 +106,7 @@
 
     #mute-button {
       position: fixed;
-      top: calc(env(safe-area-inset-top, 15px));
+      bottom: env(safe-area-inset-bottom, 20px);
       right: 15px;
       width: 38px;
       height: 38px;
