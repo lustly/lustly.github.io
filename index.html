@@ -8,10 +8,22 @@
   body, html {
     margin: 0; padding: 0; height: 100%; overflow: hidden;
     background-image: url('img/How.gif');
-    background-size: cover;
+    background-repeat: no-repeat;
     background-position: center;
+    background-size: 80%; /* zoomed out */
+    background-color: #000;
+    position: relative;
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     color: white;
+  }
+
+  /* Overlay for subtle darkening */
+  #overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.35);
+    pointer-events: none;
+    z-index: 0;
   }
 
   /* Container for horizontal links at top center */
@@ -25,6 +37,7 @@
     font-size: 20px;
     font-weight: 600;
     user-select: none;
+    z-index: 1;
   }
 
   #links a {
@@ -86,7 +99,7 @@
     opacity: 0;
     animation: fadeIn 1s forwards;
     animation-delay: 1.5s;
-    z-index: 1000;
+    z-index: 1;
   }
   #mute-button:hover, #mute-button:focus {
     background: rgba(0,0,0,0.35);
@@ -110,48 +123,50 @@
 </head>
 <body>
 
-<div id="links">
-  <a href="https://youtube.com/luststar" target="_blank" rel="noopener noreferrer">youtube</a>
-  <a href="https://open.spotify.com/artist/4bP1qxGv79uyiXuUWfJew4?si=4d3abb9c525941e9" target="_blank" rel="noopener noreferrer">spotify</a>
-  <a href="https://music.apple.com/us/artist/luststar/1527972241" target="_blank" rel="noopener noreferrer">apple music</a>
-  <a href="https://instagram.com/theluststar" target="_blank" rel="noopener noreferrer">instagram</a>
-</div>
+  <div id="overlay"></div>
 
-<button id="mute-button" aria-label="Mute/unmute music" title="Mute/unmute music" aria-pressed="false">🔈</button>
+  <div id="links">
+    <a href="https://youtube.com/luststar" target="_blank" rel="noopener noreferrer">youtube</a>
+    <a href="https://open.spotify.com/artist/4bP1qxGv79uyiXuUWfJew4?si=4d3abb9c525941e9" target="_blank" rel="noopener noreferrer">spotify</a>
+    <a href="https://music.apple.com/us/artist/luststar/1527972241" target="_blank" rel="noopener noreferrer">apple music</a>
+    <a href="https://instagram.com/theluststar" target="_blank" rel="noopener noreferrer">instagram</a>
+  </div>
 
-<audio id="music" loop src="audio/Music.mp3"></audio>
+  <button id="mute-button" aria-label="Mute/unmute music" title="Mute/unmute music" aria-pressed="false">🔈</button>
 
-<script>
-  const music = document.getElementById('music');
-  const muteBtn = document.getElementById('mute-button');
+  <audio id="music" loop src="audio/Music.mp3"></audio>
 
-  music.volume = 0.2;
-  music.play();
+  <script>
+    const music = document.getElementById('music');
+    const muteBtn = document.getElementById('mute-button');
 
-  function updateButton() {
-    if (music.muted || music.volume === 0) {
-      muteBtn.textContent = '🔇';
-      muteBtn.setAttribute('aria-pressed', 'true');
-    } else {
-      muteBtn.textContent = '🔈';
-      muteBtn.setAttribute('aria-pressed', 'false');
+    music.volume = 0.2;
+    music.play().catch(() => { /* ignore autoplay errors */ });
+
+    function updateButton() {
+      if (music.muted || music.volume === 0) {
+        muteBtn.textContent = '🔇';
+        muteBtn.setAttribute('aria-pressed', 'true');
+      } else {
+        muteBtn.textContent = '🔈';
+        muteBtn.setAttribute('aria-pressed', 'false');
+      }
     }
-  }
 
-  muteBtn.addEventListener('click', () => {
-    if (music.muted || music.volume === 0) {
-      music.muted = false;
-      if (music.volume === 0) music.volume = 0.2;
-      music.play();
-    } else {
-      music.muted = true;
-      music.pause();
-    }
+    muteBtn.addEventListener('click', () => {
+      if (music.muted || music.volume === 0) {
+        music.muted = false;
+        if (music.volume === 0) music.volume = 0.2;
+        music.play();
+      } else {
+        music.muted = true;
+        music.pause();
+      }
+      updateButton();
+    });
+
     updateButton();
-  });
-
-  updateButton();
-</script>
+  </script>
 
 </body>
 </html>
