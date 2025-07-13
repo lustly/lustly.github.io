@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#000000" />
   <title>luststar &lt;3</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+
   <style>
     html, body {
       margin: 0;
@@ -27,17 +29,14 @@
       text-align: center;
       user-select: none;
       z-index: 1;
-      width: 90%;
-      max-width: 600px;
     }
 
     #links {
       display: flex;
       justify-content: center;
-      gap: 36px;
-      font-size: 22px;
-      font-weight: 600;
-      margin-bottom: 8px;
+      gap: 40px;
+      font-size: 28px;
+      margin-bottom: 12px;
       flex-wrap: wrap;
     }
 
@@ -46,14 +45,6 @@
       opacity: 0;
       animation: fadeIn 0.6s ease forwards, crtFlicker 2.5s infinite;
       animation-delay: var(--delay);
-      transition: color 0.3s ease;
-    }
-
-    #links a:hover,
-    #links a:focus {
-      text-decoration: underline;
-      outline: none;
-      filter: brightness(1.2);
     }
 
     #links a:nth-child(1) { --delay: 0.2s; }
@@ -83,40 +74,27 @@
     /* Brand Glows */
     .youtube {
       color: #FF0000;
-      text-shadow:
-        0 0 4px #FF0000,
-        0 0 10px #FF3333,
-        0 0 16px #FF6666;
+      text-shadow: 0 0 4px #FF0000, 0 0 10px #FF3333, 0 0 16px #FF6666;
     }
 
     .spotify {
       color: #1DB954;
-      text-shadow:
-        0 0 4px #1DB954,
-        0 0 10px #24e07a,
-        0 0 16px #33ff99;
+      text-shadow: 0 0 4px #1DB954, 0 0 10px #24e07a, 0 0 16px #33ff99;
     }
 
     .apple {
       color: #FA57C1;
-      text-shadow:
-        0 0 4px #FA57C1,
-        0 0 10px #ff85d6,
-        0 0 16px #ffaadf;
+      text-shadow: 0 0 4px #FA57C1, 0 0 10px #ff85d6, 0 0 16px #ffaadf;
     }
 
     .instagram {
       color: #E1306C;
-      text-shadow:
-        0 0 4px #E1306C,
-        0 0 10px #ff4d88,
-        0 0 16px #ff6699;
+      text-shadow: 0 0 4px #E1306C, 0 0 10px #ff4d88, 0 0 16px #ff6699;
     }
 
     #contact {
       font-size: 13px;
       color: #888;
-      user-select: none;
       opacity: 0;
       animation: fadeIn 1s ease forwards;
       animation-delay: 1.4s;
@@ -157,12 +135,12 @@
 
     @media (max-width: 600px) {
       #links {
-        gap: 24px;
-        font-size: 18px;
+        gap: 26px;
+        font-size: 22px;
       }
 
       #links-container {
-        top: 65%;
+        top: 66%;
       }
     }
   </style>
@@ -170,12 +148,20 @@
 <body>
 
   <div id="links-container">
-    <nav id="links">
-      <a class="youtube" href="https://youtube.com/luststar" target="_blank" rel="noopener noreferrer">youtube</a>
-      <a class="spotify" href="https://open.spotify.com/artist/4bP1qxGv79uyiXuUWfJew4?si=4d3abb9c525941e9" target="_blank" rel="noopener noreferrer">spotify</a>
-      <a class="apple" href="https://music.apple.com/us/artist/luststar/1527972241" target="_blank" rel="noopener noreferrer">apple music</a>
-      <a class="instagram" href="https://instagram.com/theluststar" target="_blank" rel="noopener noreferrer">instagram</a>
-    </nav>
+    <div id="links">
+      <a class="youtube" href="https://youtube.com/luststar" target="_blank" aria-label="YouTube">
+        <i class="fab fa-youtube"></i>
+      </a>
+      <a class="spotify" href="https://open.spotify.com/artist/4bP1qxGv79uyiXuUWfJew4?si=4d3abb9c525941e9" target="_blank" aria-label="Spotify">
+        <i class="fab fa-spotify"></i>
+      </a>
+      <a class="apple" href="https://music.apple.com/us/artist/luststar/1527972241" target="_blank" aria-label="Apple Music">
+        <i class="fab fa-apple"></i>
+      </a>
+      <a class="instagram" href="https://instagram.com/theluststar" target="_blank" aria-label="Instagram">
+        <i class="fab fa-instagram"></i>
+      </a>
+    </div>
     <div id="contact">contact: business@lust.lol</div>
   </div>
 
