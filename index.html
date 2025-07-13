@@ -31,7 +31,7 @@
   }
 
   /* Individual link animations */
-  #links a, #links .music-toggle a {
+  #links a, #links .music-toggle button {
     color: white;
     text-decoration: none;
     opacity: 0;
@@ -39,6 +39,9 @@
     animation-fill-mode: forwards;
     animation-name: fadeInUp;
     animation-duration: 0.5s;
+    border: none;
+    background: none;
+    font-family: inherit;
   }
 
   /* Staggered animation delays */
@@ -49,7 +52,7 @@
   #links a:nth-child(5) { animation-delay: 1.4s; }
   #links a:nth-child(6) { animation-delay: 1.7s; }
   #links a:nth-child(7) { animation-delay: 2.0s; }
-  #links .music-toggle a { animation-delay: 2.3s; }
+  #links .music-toggle button { animation-delay: 2.3s; }
 
   @keyframes fadeInUp {
     to {
@@ -58,9 +61,11 @@
     }
   }
 
-  #links a:hover, #links .music-toggle a:hover {
+  #links a:hover, #links .music-toggle button:hover,
+  #links a:focus, #links .music-toggle button:focus {
     text-decoration: underline;
     cursor: pointer;
+    outline: none;
   }
 
   /* Footer content */
@@ -86,6 +91,79 @@
       gap: 8px;
     }
   }
+
+  /* Volume control container */
+  #volume-control {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 6px 10px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    opacity: 0;
+    animation: fadeIn 1s forwards;
+    animation-delay: 2.5s;
+    z-index: 1000;
+  }
+
+  @keyframes fadeIn {
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* Volume slider style */
+  #volume-slider {
+    -webkit-appearance: none;
+    width: 100px;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  /* WebKit slider thumb */
+  #volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 18px;
+    width: 18px;
+    background: white;
+    cursor: pointer;
+    border-radius: 50%;
+    margin-top: -6px;
+    box-shadow: 0 0 4px rgba(255,255,255,0.6);
+    transition: background 0.3s ease;
+  }
+  #volume-slider::-webkit-slider-thumb:hover {
+    background: #ddd;
+  }
+
+  /* Firefox slider thumb */
+  #volume-slider::-moz-range-thumb {
+    height: 18px;
+    width: 18px;
+    background: white;
+    cursor: pointer;
+    border-radius: 50%;
+    box-shadow: 0 0 4px rgba(255,255,255,0.6);
+    transition: background 0.3s ease;
+  }
+  #volume-slider::-moz-range-thumb:hover {
+    background: #ddd;
+  }
+
+  /* Slider track */
+  #volume-slider::-webkit-slider-runnable-track {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+  }
+  #volume-slider::-moz-range-track {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+  }
 </style>
 </head>
 <body>
@@ -99,49 +177,68 @@
   <a href="https://t.me/luststar" target="_blank" rel="noopener noreferrer">telegram</a>
   <a href="https://instagram.com/theluststar" target="_blank" rel="noopener noreferrer">instagram</a>
   <div class="music-toggle">
-    <a onclick="togglePlay()" id="toggle" data-text-swap="click to turn off music" data-text-original="click to turn on music">click to turn on music</a>
+    <button id="toggle" aria-pressed="false" aria-label="Toggle Music">
+      click to turn on music
+    </button>
   </div>
 </div>
 
+<!-- Volume control slider top right -->
+<div id="volume-control" title="Volume control">
+  <input
+    type="range"
+    id="volume-slider"
+    min="0"
+    max="1"
+    step="0.01"
+    value="0.2"
+    aria-label="Music volume"
+  />
+</div>
+
 <p class="content">
-  update: i respond fastest on discord.<br><br>
+  update: i respond fastest on discord.<br /><br />
   rest in peace @luststarclub on instagram
 </p>
 
 <audio id="music" loop src="audio/Music.mp3"></audio>
 
 <script>
-  const music = document.getElementById("music");
-  const toggleBtn = document.getElementById("toggle");
+  const music = document.getElementById('music');
+  const toggleBtn = document.getElementById('toggle');
+  const volumeSlider = document.getElementById('volume-slider');
   let isPlaying = false;
-  music.volume = 0.2;
 
-  function togglePlay() {
+  // Toggle music playback
+  toggleBtn.addEventListener('click', () => {
     if (isPlaying) {
       music.pause();
     } else {
       music.play();
     }
-  }
-
-  music.onplaying = function() {
-    isPlaying = true;
-    toggleBtn.textContent = toggleBtn.getAttribute("data-text-swap");
-  };
-
-  music.onpause = function() {
-    isPlaying = false;
-    toggleBtn.textContent = toggleBtn.getAttribute("data-text-original");
-  };
-
-  toggleBtn.addEventListener('click', function() {
-    if (toggleBtn.innerHTML === toggleBtn.getAttribute("data-text-swap")) {
-      toggleBtn.innerHTML = toggleBtn.getAttribute("data-text-original");
-    } else {
-      toggleBtn.setAttribute("data-text-original", toggleBtn.innerHTML);
-      toggleBtn.innerHTML = toggleBtn.getAttribute("data-text-swap");
-    }
   });
+
+  // Update UI on play
+  music.onplaying = () => {
+    isPlaying = true;
+    toggleBtn.textContent = 'click to turn off music';
+    toggleBtn.setAttribute('aria-pressed', 'true');
+  };
+
+  // Update UI on pause
+  music.onpause = () => {
+    isPlaying = false;
+    toggleBtn.textContent = 'click to turn on music';
+    toggleBtn.setAttribute('aria-pressed', 'false');
+  };
+
+  // Volume control listener
+  volumeSlider.addEventListener('input', (e) => {
+    music.volume = e.target.value;
+  });
+
+  // Set initial volume
+  music.volume = volumeSlider.value;
 </script>
 
 </body>
