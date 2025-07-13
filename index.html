@@ -1,194 +1,187 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>luststar &lt;3</title>
-<style>
-  html, body {
-    margin: 0; padding: 0;
-    min-height: 100vh;
-    padding-top: env(safe-area-inset-top);
-    box-sizing: border-box;
-    background-image: url('img/How.gif');
-    background-size: 110% 110%;
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-attachment: scroll;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    color: white;
-    /* Remove overflow hidden */
-  }
-
-  /* Container for horizontal links at top center */
-  #links {
-    position: fixed;
-    top: calc(20px + env(safe-area-inset-top));
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 24px;
-    font-size: 20px;
-    font-weight: 600;
-    user-select: none;
-    white-space: nowrap;
-  }
-
-  #links a {
-    color: #7FFF00; /* bright green */
-    text-decoration: none;
-    opacity: 0;
-    transform: translateY(10px);
-    animation-fill-mode: forwards;
-    animation-name: fadeInUp, wave;
-    animation-duration: 0.5s, 3s;
-    animation-iteration-count: 1, infinite;
-    animation-timing-function: ease-in-out, ease-in-out;
-    text-shadow:
-      0 0 5px #7FFF00,
-      0 0 10px #32CD32,
-      0 0 15px #32CD32,
-      0 0 20px #00FF00;
-  }
-
-  /* Stagger fadeIn for horizontal links */
-  #links a:nth-child(1) {
-    animation-delay: 0.2s, 0s;
-  }
-  #links a:nth-child(2) {
-    animation-delay: 0.5s, 0.25s;
-  }
-  #links a:nth-child(3) {
-    animation-delay: 0.8s, 0.5s;
-  }
-  #links a:nth-child(4) {
-    animation-delay: 1.1s, 0.75s;
-  }
-
-  @keyframes fadeInUp {
-    to {
-      opacity: 1;
-      transform: translateY(0);
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>luststar &lt;3</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      position: fixed;
+      overflow: hidden;
+      background: url('img/How.gif') center center / cover no-repeat;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: white;
+      overscroll-behavior: none;
     }
-  }
 
-  @keyframes wave {
-    0%, 100% { text-shadow:
-      0 0 5px #7FFF00,
-      0 0 10px #32CD32,
-      0 0 15px #32CD32,
-      0 0 20px #00FF00; }
-    50% { text-shadow:
-      0 0 10px #00FF00,
-      0 0 20px #7FFF00,
-      0 0 30px #7FFF00,
-      0 0 40px #32CD32; }
-  }
-
-  #links a:hover, #links a:focus {
-    text-decoration: underline;
-    cursor: pointer;
-    outline: none;
-  }
-
-  audio {
-    display: none;
-  }
-
-  /* Mute button top-right */
-  #mute-button {
-    position: fixed;
-    top: calc(15px + env(safe-area-inset-top));
-    right: 15px;
-    width: 38px;
-    height: 38px;
-    background: rgba(0, 0, 0, 0.15);
-    border-radius: 50%;
-    border: none;
-    color: white;
-    font-size: 20px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.3s ease;
-    user-select: none;
-    opacity: 0;
-    animation: fadeIn 1s forwards;
-    animation-delay: 1.5s;
-    z-index: 1000;
-  }
-  #mute-button:hover, #mute-button:focus {
-    background: rgba(0,0,0,0.35);
-    outline: none;
-  }
-
-  @keyframes fadeIn {
-    to {
-      opacity: 1;
-    }
-  }
-
-  @media (max-width: 600px) {
+    /* Link container */
     #links {
-      font-size: 16px;
-      gap: 16px;
-      top: calc(15px + env(safe-area-inset-top));
+      position: fixed;
+      top: env(safe-area-inset-top, 20px);
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 24px;
+      font-size: 20px;
+      font-weight: 600;
+      user-select: none;
+      white-space: nowrap;
+      z-index: 1;
     }
-  }
-</style>
+
+    #links a {
+      color: #7FFF00;
+      text-decoration: none;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: fadeInUp 0.6s ease forwards, glowPulse 2s ease-in-out infinite;
+      text-shadow:
+        0 0 5px #7FFF00,
+        0 0 10px #32CD32,
+        0 0 15px #32CD32,
+        0 0 20px #00FF00;
+    }
+
+    /* Stagger each link's fade-in */
+    #links a:nth-child(1) { animation-delay: 0.2s, 0s; }
+    #links a:nth-child(2) { animation-delay: 0.5s, 0s; }
+    #links a:nth-child(3) { animation-delay: 0.8s, 0s; }
+    #links a:nth-child(4) { animation-delay: 1.1s, 0s; }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes glowPulse {
+      0%, 100% {
+        text-shadow:
+          0 0 5px #7FFF00,
+          0 0 10px #32CD32,
+          0 0 15px #32CD32,
+          0 0 20px #00FF00;
+      }
+      50% {
+        text-shadow:
+          0 0 10px #00FF00,
+          0 0 20px #7FFF00,
+          0 0 30px #7FFF00,
+          0 0 40px #32CD32;
+      }
+    }
+
+    #links a:hover, #links a:focus {
+      text-decoration: underline;
+      cursor: pointer;
+      outline: none;
+    }
+
+    /* Mute button */
+    #mute-button {
+      position: fixed;
+      top: calc(env(safe-area-inset-top, 15px));
+      right: 15px;
+      width: 38px;
+      height: 38px;
+      background: rgba(0, 0, 0, 0.15);
+      border-radius: 50%;
+      border: none;
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s ease;
+      user-select: none;
+      opacity: 0;
+      animation: fadeIn 1s forwards;
+      animation-delay: 1.5s;
+      z-index: 1000;
+    }
+
+    #mute-button:hover,
+    #mute-button:focus {
+      background: rgba(0, 0, 0, 0.35);
+      outline: none;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+
+    audio {
+      display: none;
+    }
+
+    @media (max-width: 600px) {
+      #links {
+        font-size: 16px;
+        gap: 16px;
+        top: calc(env(safe-area-inset-top, 15px));
+      }
+    }
+  </style>
 </head>
 <body>
 
-<div id="links">
-  <a href="https://youtube.com/luststar" target="_blank" rel="noopener noreferrer">youtube</a>
-  <a href="https://open.spotify.com/artist/4bP1qxGv79uyiXuUWfJew4?si=4d3abb9c525941e9" target="_blank" rel="noopener noreferrer">spotify</a>
-  <a href="https://music.apple.com/us/artist/luststar/1527972241" target="_blank" rel="noopener noreferrer">apple music</a>
-  <a href="https://instagram.com/theluststar" target="_blank" rel="noopener noreferrer">instagram</a>
-</div>
+  <div id="links">
+    <a href="https://youtube.com/luststar" target="_blank" rel="noopener noreferrer">youtube</a>
+    <a href="https://open.spotify.com/artist/4bP1qxGv79uyiXuUWfJew4?si=4d3abb9c525941e9" target="_blank" rel="noopener noreferrer">spotify</a>
+    <a href="https://music.apple.com/us/artist/luststar/1527972241" target="_blank" rel="noopener noreferrer">apple music</a>
+    <a href="https://instagram.com/theluststar" target="_blank" rel="noopener noreferrer">instagram</a>
+  </div>
 
-<button id="mute-button" aria-label="Mute/unmute music" title="Mute/unmute music" aria-pressed="false">🔈</button>
+  <button id="mute-button" aria-label="Mute/unmute music" title="Mute/unmute music" aria-pressed="false">🔈</button>
 
-<audio id="music" loop src="audio/Music.mp3"></audio>
+  <audio id="music" loop src="audio/Music.mp3"></audio>
 
-<script>
-  function setBodyHeight() {
+  <script>
+    // Fix height on iOS
     document.body.style.height = window.innerHeight + 'px';
-  }
-  window.addEventListener('resize', setBodyHeight);
-  window.addEventListener('orientationchange', setBodyHeight);
-  setBodyHeight();
+    window.addEventListener('resize', () => {
+      document.body.style.height = window.innerHeight + 'px';
+    });
 
-  const music = document.getElementById('music');
-  const muteBtn = document.getElementById('mute-button');
+    // Music toggle logic
+    const music = document.getElementById('music');
+    const muteBtn = document.getElementById('mute-button');
 
-  music.volume = 0.2;
-  music.play();
+    music.volume = 0.2;
+    music.play();
 
-  function updateButton() {
-    if (music.muted || music.volume === 0) {
-      muteBtn.textContent = '🔇';
-      muteBtn.setAttribute('aria-pressed', 'true');
-    } else {
-      muteBtn.textContent = '🔈';
-      muteBtn.setAttribute('aria-pressed', 'false');
+    function updateButton() {
+      if (music.muted || music.volume === 0) {
+        muteBtn.textContent = '🔇';
+        muteBtn.setAttribute('aria-pressed', 'true');
+      } else {
+        muteBtn.textContent = '🔈';
+        muteBtn.setAttribute('aria-pressed', 'false');
+      }
     }
-  }
 
-  muteBtn.addEventListener('click', () => {
-    if (music.muted || music.volume === 0) {
-      music.muted = false;
-      if (music.volume === 0) music.volume = 0.2;
-      music.play();
-    } else {
-      music.muted = true;
-      music.pause();
-    }
+    muteBtn.addEventListener('click', () => {
+      if (music.muted || music.volume === 0) {
+        music.muted = false;
+        if (music.volume === 0) music.volume = 0.2;
+        music.play();
+      } else {
+        music.muted = true;
+        music.pause();
+      }
+      updateButton();
+    });
+
     updateButton();
-  });
-
-  updateButton();
-</script>
+  </script>
 
 </body>
 </html>
