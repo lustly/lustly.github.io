@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#000000">
+  <meta name="theme-color" content="#000000" />
   <title>luststar &lt;3</title>
   <style>
     html, body {
@@ -19,21 +19,27 @@
       color: white;
     }
 
-    /* Centered links */
-    #links {
+    /* Container below "LUSTSTAR" text */
+    #links-container {
       position: absolute;
-      top: 50%;
+      top: 62%; /* slightly below middle */
       left: 50%;
-      transform: translate(-50%, -50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 20px;
-      font-size: 20px;
-      font-weight: 600;
-      user-select: none;
+      transform: translateX(-50%);
       text-align: center;
+      user-select: none;
       z-index: 1;
+      width: 90%;
+      max-width: 600px;
+    }
+
+    /* Horizontal links */
+    #links {
+      display: flex;
+      justify-content: center;
+      gap: 36px;
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 8px;
     }
 
     #links a {
@@ -47,12 +53,14 @@
         0 0 12px #32CD32,
         0 0 18px #32CD32,
         0 0 24px #00FF00;
+      transition: color 0.3s ease;
     }
 
     #links a:hover,
     #links a:focus {
       text-decoration: underline;
       outline: none;
+      color: #aaffaa;
     }
 
     /* Fade in */
@@ -62,7 +70,7 @@
       }
     }
 
-    /* Enhanced CRT flicker */
+    /* CRT flicker */
     @keyframes crtFlicker {
       0%, 100% {
         opacity: 0.95;
@@ -107,22 +115,20 @@
       }
     }
 
-    /* Stagger delays */
+    /* Stagger fadeIn delays */
     #links a:nth-child(1) { --delay: 0.2s; }
     #links a:nth-child(2) { --delay: 0.5s; }
     #links a:nth-child(3) { --delay: 0.8s; }
     #links a:nth-child(4) { --delay: 1.1s; }
 
-    /* Contact text */
+    /* Contact text below links */
     #contact {
-      position: fixed;
-      bottom: env(safe-area-inset-bottom, 10px);
-      left: 50%;
-      transform: translateX(-50%);
       font-size: 13px;
       color: #888;
-      z-index: 1;
       user-select: none;
+      opacity: 0;
+      animation: fadeIn 1s ease forwards;
+      animation-delay: 1.4s;
     }
 
     /* Mute button bottom right */
@@ -161,22 +167,26 @@
 
     @media (max-width: 600px) {
       #links {
-        font-size: 17px;
-        gap: 16px;
+        gap: 24px;
+        font-size: 18px;
+      }
+      #links-container {
+        top: 65%;
       }
     }
   </style>
 </head>
 <body>
 
-  <div id="links">
-    <a href="https://youtube.com/luststar" target="_blank" rel="noopener noreferrer">youtube</a>
-    <a href="https://open.spotify.com/artist/4bP1qxGv79uyiXuUWfJew4?si=4d3abb9c525941e9" target="_blank" rel="noopener noreferrer">spotify</a>
-    <a href="https://music.apple.com/us/artist/luststar/1527972241" target="_blank" rel="noopener noreferrer">apple music</a>
-    <a href="https://instagram.com/theluststar" target="_blank" rel="noopener noreferrer">instagram</a>
+  <div id="links-container">
+    <nav id="links">
+      <a href="https://youtube.com/luststar" target="_blank" rel="noopener noreferrer">youtube</a>
+      <a href="https://open.spotify.com/artist/4bP1qxGv79uyiXuUWfJew4?si=4d3abb9c525941e9" target="_blank" rel="noopener noreferrer">spotify</a>
+      <a href="https://music.apple.com/us/artist/luststar/1527972241" target="_blank" rel="noopener noreferrer">apple music</a>
+      <a href="https://instagram.com/theluststar" target="_blank" rel="noopener noreferrer">instagram</a>
+    </nav>
+    <div id="contact">contact: business@lust.lol</div>
   </div>
-
-  <div id="contact">contact: business@lust.lol</div>
 
   <button id="mute-button" aria-label="Mute/unmute music" title="Mute/unmute music" aria-pressed="false">🔈</button>
   <audio id="music" loop src="audio/Music.mp3"></audio>
