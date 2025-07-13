@@ -2,161 +2,187 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>luststar &lt;3</title>
-    <!-- Facebook Meta Tags -->
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="luststar">
-    <meta property="og:description" content="luststar's official links">
-    <meta property="og:url" content="https://luststar.club">
-    <meta property="og:image" content="https://cdn.discordapp.com/attachments/852613805317816340/997885029466243162/How.gif">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>luststar &lt;3</title>
 
-    <link rel="SHORTCUT ICON" href="img/favicon.png" type="Logo">
-    <link rel="ICON" href="img/favicon.png" type="Logo"> 
-    <link rel="shortcut icon" type="image/png" href="">
-    <link rel="stylesheet" href="css/style.css">
+  <!-- Facebook Meta Tags -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="luststar" />
+  <meta property="og:description" content="luststar's official links" />
+  <meta property="og:url" content="https://luststar.club" />
+  <meta property="og:image"
+    content="https://cdn.discordapp.com/attachments/852613805317816340/997885029466243162/How.gif" />
 
-    <script src="https://www.ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
-    <script src="glitch.jquery.js"></script>
-    <script src="http://www.youtube.com/iframe_api"></script>
-    
-    <style>
-        /* Set up the background gif */
-        body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            background-image: url('img/How.gif');  /* Reference local gif in img folder */
-            background-size: cover;
-            background-position: center;
-            height: 100%;
-        }
+  <link rel="SHORTCUT ICON" href="img/favicon.png" type="Logo" />
+  <link rel="ICON" href="img/favicon.png" type="Logo" />
+  <link rel="stylesheet" href="css/style.css" />
 
-        /* Container for links and music toggle */
-        #screen {
-            text-align: center;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 999;
-            color: #fff;
+  <script src="https://www.ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+  <script src="glitch.jquery.js"></script>
+  <script src="http://www.youtube.com/iframe_api"></script>
 
-            /* REMOVE the red box */
-            background: none !important;
-            border: none !important;
-            box-shadow: none !important;
-        }
+  <style>
+    /* Background GIF setup */
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-image: url('img/How.gif');
+      background-size: cover;
+      background-position: center;
+      height: 100%;
+    }
 
-        /* Style the font size of the links */
-        #screen font {
-            font-size: 22px;
-        }
+    /* Main content container */
+    #screen {
+      text-align: center;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 999;
+      color: #fff;
 
-        a {
-            color: #fff;
-            font-size: 18px;
-            text-decoration: none;
-        }
+      background: none;
+      border: none;
+      box-shadow: none;
+      padding: 0;
+      width: 90%;
+      max-width: 500px;
 
-        a:hover {
-            text-decoration: underline;
-        }
+      text-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
+    }
 
-        /* Music toggle button */
-        .music-toggle a {
-            display: inline-block;
-            padding: 10px;
-            background-color: #000;
-            color: #fff;
-            font-size: 18px;
-            text-align: center;
-            cursor: pointer;
-            margin-top: 15px;
-            border-radius: 5px;
-        }
+    #screen font {
+      font-size: 22px;
+    }
 
-        .music-toggle a:hover {
-            background-color: #444;
-        }
+    a {
+      color: #fff;
+      font-size: 18px;
+      text-decoration: none;
+    }
 
-        /* Footer or content at the bottom */
-        .content {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: #f1f1f1;
-            font-size: 14px;
-        }
+    a:hover {
+      text-decoration: underline;
+    }
 
-        /* Style for the music player toggle */
-        audio {
-            display: none;
-        }
-    </style>
+    .music-toggle a {
+      display: inline-block;
+      padding: 10px;
+      background-color: #000;
+      color: #fff;
+      font-size: 18px;
+      text-align: center;
+      cursor: pointer;
+      margin-top: 15px;
+      border-radius: 5px;
+      text-shadow: none;
+    }
+
+    .music-toggle a:hover {
+      background-color: #444;
+    }
+
+    .content {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #f1f1f1;
+      font-size: 14px;
+      text-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
+      text-align: center;
+      padding: 0 10px;
+    }
+
+    audio {
+      display: none;
+    }
+
+    /* Mobile styles */
+    @media (max-width: 600px) {
+      #screen font {
+        font-size: 18px;
+      }
+
+      a {
+        font-size: 16px;
+      }
+
+      .music-toggle a {
+        font-size: 16px;
+        padding: 8px;
+      }
+
+      .content {
+        font-size: 12px;
+        padding: 0 15px;
+      }
+    }
+  </style>
 </head>
 
 <body>
+  <div id="screen">
+    <font size="5">lust.lol // luststar.club</font>
+    <hr />
+    <a href="https://youtube.com/luststar" target="_blank">youtube</a><br />
+    <a href="https://twitch.tv/luststar" target="_blank">twitch</a><br />
+    <a href="https://discord.com/users/852610425005932564" target="_blank">discord: @luststar</a><br />
+    <a href="https://open.spotify.com/artist/4bP1qxGv79uyiXuUWfJew4?si=4d3abb9c525941e9" target="_blank">spotify</a><br />
+    <a href="https://music.apple.com/us/artist/luststar/1527972241" target="_blank">apple music</a><br />
+    <a href="https://t.me/luststar" target="_blank">telegram</a><br />
+    <a href="https://instagram.com/theluststar" target="_blank">instagram</a><br />
 
-    <div id="screen">
-        <font size="5">lust.lol // luststar.club</font>
-        <hr>
-        <a href="https://youtube.com/luststar" target="_blank">youtube</a><br>
-        <a href="https://twitch.tv/luststar" target="_blank">twitch</a><br>
-        <a href="https://discord.com/users/852610425005932564" target="_blank">discord: @luststar</a><br>
-        <a href="https://open.spotify.com/artist/4bP1qxGv79uyiXuUWfJew4?si=4d3abb9c525941e9" target="_blank">spotify</a><br>
-        <a href="https://music.apple.com/us/artist/luststar/1527972241" target="_blank">apple music</a><br>
-        <a href="https://t.me/luststar" target="_blank">telegram</a><br>
-        <a href="https://instagram.com/theluststar" target="_blank">instagram</a><br>
-        
-        <hr>
-        <div class="music-toggle">
-            <a onclick="togglePlay()" id="toggle" data-text-swap="click to turn off music" data-text-original="Music off">click to turn on music</a>
-        </div>
-        <audio id="music" loop="loop" src="audio/Music.mp3"></audio>
+    <hr />
+    <div class="music-toggle">
+      <a onclick="togglePlay()" id="toggle" data-text-swap="click to turn off music"
+        data-text-original="Music off">click to turn on music</a>
     </div>
+    <audio id="music" loop="loop" src="audio/Music.mp3"></audio>
+  </div>
 
-    <p class="content">
-        update: i respond fastest on discord.
-        <br><br>
-        rest in peace @luststarclub on instagram
-    </p>
+  <p class="content">
+    update: i respond fastest on discord.
+    <br /><br />
+    rest in peace @luststarclub on instagram
+  </p>
 
-    <script>
-        var music = document.getElementById("music");
-        var isPlaying = false;
-        music.volume = 0.2;
+  <script>
+    var music = document.getElementById("music");
+    var isPlaying = false;
+    music.volume = 0.2;
 
-        function togglePlay() {
-            if (isPlaying) {
-                music.pause()
-            } else {
-                music.play();
-            }
-        }
+    function togglePlay() {
+      if (isPlaying) {
+        music.pause();
+      } else {
+        music.play();
+      }
+    }
 
-        music.onplaying = function() {
-            isPlaying = true;
-            document.getElementById("music-animation")?.classList.add('on');
-        };
+    music.onplaying = function () {
+      isPlaying = true;
+      document.getElementById("music-animation")?.classList.add('on');
+    };
 
-        music.onpause = function() {
-            isPlaying = false;
-            document.getElementById("music-animation")?.classList.remove('on');
-        };
+    music.onpause = function () {
+      isPlaying = false;
+      document.getElementById("music-animation")?.classList.remove('on');
+    };
 
-        var button = document.getElementById("toggle");
-        button.addEventListener('click', function() {
-            if (button.getAttribute("data-text-swap") == button.innerHTML) {
-                button.innerHTML = button.getAttribute("data-text-original");
-            } else {
-                button.setAttribute("data-text-original", button.innerHTML);
-                button.innerHTML = button.getAttribute("data-text-swap");
-            }
-        }, false);
-    </script>
+    var button = document.getElementById("toggle");
+    button.addEventListener('click', function () {
+      if (button.getAttribute("data-text-swap") == button.innerHTML) {
+        button.innerHTML = button.getAttribute("data-text-original");
+      } else {
+        button.setAttribute("data-text-original", button.innerHTML);
+        button.innerHTML = button.getAttribute("data-text-swap");
+      }
+    }, false);
+  </script>
 </body>
 
 </html>
