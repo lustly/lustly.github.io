@@ -1,137 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>luststar &lt;3</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>luststar &lt;3</title>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-image: url('img/How.gif');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    font-family: monospace, monospace;
+    color: #fff;
+    text-shadow: 0 0 5px rgba(0,0,0,0.8);
+  }
 
-  <!-- Facebook Meta Tags -->
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="luststar" />
-  <meta property="og:description" content="luststar's official links" />
-  <meta property="og:url" content="https://luststar.club" />
-  <meta property="og:image"
-    content="https://cdn.discordapp.com/attachments/852613805317816340/997885029466243162/How.gif" />
+  #links {
+    position: fixed;
+    top: 50%;
+    left: 20px;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
 
-  <link rel="SHORTCUT ICON" href="img/favicon.png" type="Logo" />
-  <link rel="ICON" href="img/favicon.png" type="Logo" />
-  <link rel="stylesheet" href="css/style.css" />
+  #links a, #links .music-toggle {
+    opacity: 0;
+    transform: translateX(-20px);
+    animation-fill-mode: forwards;
+    animation-name: fadeInSlide;
+    animation-duration: 0.5s;
+  }
 
-  <script src="https://www.ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
-  <script src="glitch.jquery.js"></script>
-  <script src="http://www.youtube.com/iframe_api"></script>
+  /* stagger delays */
+  #links a:nth-child(1) { animation-delay: 0.2s; }
+  #links a:nth-child(2) { animation-delay: 0.4s; }
+  #links a:nth-child(3) { animation-delay: 0.6s; }
+  #links a:nth-child(4) { animation-delay: 0.8s; }
+  #links a:nth-child(5) { animation-delay: 1s; }
+  #links a:nth-child(6) { animation-delay: 1.2s; }
+  #links a:nth-child(7) { animation-delay: 1.4s; }
+  #links .music-toggle { animation-delay: 1.6s; }
 
-  <style>
-    /* Background GIF setup */
-    body {
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-      background-image: url('img/How.gif');
-      background-size: cover;
-      background-position: center;
-      height: 100%;
+  @keyframes fadeInSlide {
+    to {
+      opacity: 1;
+      transform: translateX(0);
     }
+  }
 
-    /* Fade-in animation */
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateX(-30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateX(0);
-      }
+  a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 18px;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+
+  .music-toggle a {
+    background: transparent;
+    border: none;
+    padding: 6px 8px;
+    font-family: monospace, monospace;
+    cursor: pointer;
+  }
+
+  /* Footer content */
+  .content {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 14px;
+    color: #f1f1f1;
+    text-shadow: 0 0 3px rgba(0,0,0,0.7);
+  }
+
+  audio {
+    display: none;
+  }
+
+  @media (max-width: 600px) {
+    #links {
+      left: 10px;
+      gap: 6px;
     }
-
-    /* Left-center positioned links */
-    #screen {
-      position: absolute;
-      top: 50%;
-      left: 5%;
-      transform: translateY(-50%);
-      z-index: 999;
-      color: #fff;
-      background: none;
-      padding: 0;
-      width: auto;
-
-      animation: fadeIn 1.2s ease-out;
-      text-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
-    }
-
     a {
-      color: #fff;
-      font-size: 18px;
-      text-decoration: none;
-      display: block;
-      margin-bottom: 6px;
+      font-size: 16px;
     }
-
-    a:hover {
-      text-decoration: underline;
-    }
-
-    .music-toggle a {
-      display: inline-block;
-      padding: 10px;
-      background-color: #000;
-      color: #fff;
-      font-size: 18px;
-      text-align: center;
-      cursor: pointer;
-      margin-top: 15px;
-      border-radius: 5px;
-      text-shadow: none;
-    }
-
-    .music-toggle a:hover {
-      background-color: #444;
-    }
-
-    .content {
-      position: absolute;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      color: #f1f1f1;
-      font-size: 14px;
-      text-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
-      text-align: center;
-      padding: 0 10px;
-    }
-
-    audio {
-      display: none;
-    }
-
-    /* Mobile responsiveness */
-    @media (max-width: 600px) {
-      a {
-        font-size: 16px;
-      }
-
-      .music-toggle a {
-        font-size: 16px;
-        padding: 8px;
-      }
-
-      .content {
-        font-size: 12px;
-        padding: 0 15px;
-      }
-
-      #screen {
-        left: 5%;
-      }
-    }
-  </style>
+  }
+</style>
 </head>
-
 <body>
-  <div id="screen">
+  <div id="links">
     <a href="https://youtube.com/luststar" target="_blank">youtube</a>
     <a href="https://twitch.tv/luststar" target="_blank">twitch</a>
     <a href="https://discord.com/users/852610425005932564" target="_blank">discord: @luststar</a>
@@ -139,24 +105,21 @@
     <a href="https://music.apple.com/us/artist/luststar/1527972241" target="_blank">apple music</a>
     <a href="https://t.me/luststar" target="_blank">telegram</a>
     <a href="https://instagram.com/theluststar" target="_blank">instagram</a>
-
     <div class="music-toggle">
-      <a onclick="togglePlay()" id="toggle" data-text-swap="click to turn off music"
-        data-text-original="Music off">click to turn on music</a>
+      <a onclick="togglePlay()" id="toggle" data-text-swap="click to turn off music" data-text-original="click to turn on music">click to turn on music</a>
     </div>
-    <audio id="music" loop="loop" src="audio/Music.mp3"></audio>
   </div>
 
   <p class="content">
-    update: i respond fastest on discord.
-    <br /><br />
+    update: i respond fastest on discord.<br /><br />
     rest in peace @luststarclub on instagram
   </p>
 
+  <audio id="music" loop src="audio/Music.mp3" volume="0.2"></audio>
+
   <script>
-    var music = document.getElementById("music");
-    var isPlaying = false;
-    music.volume = 0.2;
+    const music = document.getElementById('music');
+    let isPlaying = false;
 
     function togglePlay() {
       if (isPlaying) {
@@ -166,26 +129,32 @@
       }
     }
 
-    music.onplaying = function () {
+    music.onplaying = () => {
       isPlaying = true;
-      document.getElementById("music-animation")?.classList.add('on');
+      toggleBtnText('off');
     };
-
-    music.onpause = function () {
+    music.onpause = () => {
       isPlaying = false;
-      document.getElementById("music-animation")?.classList.remove('on');
+      toggleBtnText('on');
     };
 
-    var button = document.getElementById("toggle");
-    button.addEventListener('click', function () {
-      if (button.getAttribute("data-text-swap") == button.innerHTML) {
-        button.innerHTML = button.getAttribute("data-text-original");
+    const toggleBtn = document.getElementById('toggle');
+    toggleBtn.addEventListener('click', () => {
+      if (toggleBtn.textContent === toggleBtn.getAttribute('data-text-swap')) {
+        toggleBtn.textContent = toggleBtn.getAttribute('data-text-original');
       } else {
-        button.setAttribute("data-text-original", button.innerHTML);
-        button.innerHTML = button.getAttribute("data-text-swap");
+        toggleBtn.setAttribute('data-text-original', toggleBtn.textContent);
+        toggleBtn.textContent = toggleBtn.getAttribute('data-text-swap');
       }
-    }, false);
+    });
+
+    function toggleBtnText(state) {
+      if(state === 'on'){
+        toggleBtn.textContent = 'click to turn on music';
+      } else {
+        toggleBtn.textContent = 'click to turn off music';
+      }
+    }
   </script>
 </body>
-
 </html>
