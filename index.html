@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
   <title>luststar &lt;3</title>
   <style>
     html, body {
@@ -16,9 +18,9 @@
       font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       color: white;
       overscroll-behavior: none;
+      background-color: #000;
     }
 
-    /* Link container */
     #links {
       position: fixed;
       top: env(safe-area-inset-top, 20px);
@@ -38,7 +40,9 @@
       text-decoration: none;
       opacity: 0;
       transform: translateY(10px);
-      animation: fadeInUp 0.6s ease forwards, glowPulse 2s ease-in-out infinite;
+      animation:
+        fadeInUp 0.6s ease forwards,
+        crtFlicker 2.2s infinite;
       text-shadow:
         0 0 5px #7FFF00,
         0 0 10px #32CD32,
@@ -46,7 +50,7 @@
         0 0 20px #00FF00;
     }
 
-    /* Stagger each link's fade-in */
+    /* Staggered fade-in delays */
     #links a:nth-child(1) { animation-delay: 0.2s, 0s; }
     #links a:nth-child(2) { animation-delay: 0.5s, 0s; }
     #links a:nth-child(3) { animation-delay: 0.8s, 0s; }
@@ -59,20 +63,38 @@
       }
     }
 
-    @keyframes glowPulse {
+    @keyframes crtFlicker {
       0%, 100% {
         text-shadow:
-          0 0 5px #7FFF00,
-          0 0 10px #32CD32,
-          0 0 15px #32CD32,
-          0 0 20px #00FF00;
+          0 0 3px #7FFF00,
+          0 0 6px #32CD32,
+          0 0 9px #32CD32,
+          0 0 12px #00FF00;
       }
-      50% {
+      20% {
         text-shadow:
-          0 0 10px #00FF00,
-          0 0 20px #7FFF00,
-          0 0 30px #7FFF00,
-          0 0 40px #32CD32;
+          0 0 4px #00FF00,
+          0 0 8px #7FFF00,
+          0 0 12px #32CD32,
+          0 0 16px #00FF00;
+      }
+      40% {
+        text-shadow:
+          0 0 1px #32CD32,
+          0 0 2px #7FFF00,
+          0 0 4px #00FF00;
+      }
+      60% {
+        text-shadow:
+          0 0 6px #7FFF00,
+          0 0 12px #32CD32,
+          0 0 18px #00FF00;
+      }
+      80% {
+        text-shadow:
+          0 0 2px #00FF00,
+          0 0 4px #7FFF00,
+          0 0 6px #32CD32;
       }
     }
 
@@ -82,7 +104,6 @@
       outline: none;
     }
 
-    /* Mute button */
     #mute-button {
       position: fixed;
       top: calc(env(safe-area-inset-top, 15px));
@@ -145,13 +166,6 @@
   <audio id="music" loop src="audio/Music.mp3"></audio>
 
   <script>
-    // Fix height on iOS
-    document.body.style.height = window.innerHeight + 'px';
-    window.addEventListener('resize', () => {
-      document.body.style.height = window.innerHeight + 'px';
-    });
-
-    // Music toggle logic
     const music = document.getElementById('music');
     const muteBtn = document.getElementById('mute-button');
 
