@@ -31,7 +31,7 @@
   }
 
   /* Individual link animations */
-  #links a, #links .music-toggle button {
+  #links a {
     color: white;
     text-decoration: none;
     opacity: 0;
@@ -39,9 +39,6 @@
     animation-fill-mode: forwards;
     animation-name: fadeInUp;
     animation-duration: 0.5s;
-    border: none;
-    background: none;
-    font-family: inherit;
   }
 
   /* Staggered animation delays */
@@ -52,7 +49,6 @@
   #links a:nth-child(5) { animation-delay: 1.4s; }
   #links a:nth-child(6) { animation-delay: 1.7s; }
   #links a:nth-child(7) { animation-delay: 2.0s; }
-  #links .music-toggle button { animation-delay: 2.3s; }
 
   @keyframes fadeInUp {
     to {
@@ -61,22 +57,10 @@
     }
   }
 
-  #links a:hover, #links .music-toggle button:hover,
-  #links a:focus, #links .music-toggle button:focus {
+  #links a:hover, #links a:focus {
     text-decoration: underline;
     cursor: pointer;
     outline: none;
-  }
-
-  /* Footer content */
-  .content {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 14px;
-    color: #f1f1f1;
-    text-shadow: 0 0 3px rgba(0,0,0,0.7);
   }
 
   audio {
@@ -92,14 +76,14 @@
     }
   }
 
-  /* Volume control container */
+  /* Volume control container, vertical slider top right */
   #volume-control {
     position: fixed;
     top: 15px;
     right: 15px;
-    background: rgba(0, 0, 0, 0.3);
-    padding: 6px 10px;
-    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.15);
+    padding: 8px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     opacity: 0;
@@ -114,26 +98,30 @@
     }
   }
 
-  /* Volume slider style */
+  /* Vertical slider styles */
   #volume-slider {
     -webkit-appearance: none;
-    width: 100px;
-    background: transparent;
+    width: 6px;
+    height: 100px;
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 4px;
     cursor: pointer;
+    writing-mode: bt-lr; /* vertical bottom-to-top */
+    transform: rotate(180deg); /* so that bottom=0, top=1 */
   }
 
   /* WebKit slider thumb */
   #volume-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    height: 18px;
-    width: 18px;
+    height: 16px;
+    width: 16px;
     background: white;
     cursor: pointer;
     border-radius: 50%;
-    margin-top: -6px;
-    box-shadow: 0 0 4px rgba(255,255,255,0.6);
+    box-shadow: 0 0 6px rgba(255,255,255,0.8);
     transition: background 0.3s ease;
+    margin-top: -6px; /* center on track */
   }
   #volume-slider::-webkit-slider-thumb:hover {
     background: #ddd;
@@ -141,28 +129,28 @@
 
   /* Firefox slider thumb */
   #volume-slider::-moz-range-thumb {
-    height: 18px;
-    width: 18px;
+    height: 16px;
+    width: 16px;
     background: white;
     cursor: pointer;
     border-radius: 50%;
-    box-shadow: 0 0 4px rgba(255,255,255,0.6);
+    box-shadow: 0 0 6px rgba(255,255,255,0.8);
     transition: background 0.3s ease;
   }
   #volume-slider::-moz-range-thumb:hover {
     background: #ddd;
   }
 
-  /* Slider track */
+  /* Track styling */
   #volume-slider::-webkit-slider-runnable-track {
-    height: 6px;
-    background: rgba(255, 255, 255, 0.3);
-    border-radius: 3px;
+    height: 100px;
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 4px;
   }
   #volume-slider::-moz-range-track {
-    height: 6px;
-    background: rgba(255, 255, 255, 0.3);
-    border-radius: 3px;
+    height: 100px;
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 4px;
   }
 </style>
 </head>
@@ -176,15 +164,10 @@
   <a href="https://music.apple.com/us/artist/luststar/1527972241" target="_blank" rel="noopener noreferrer">apple music</a>
   <a href="https://t.me/luststar" target="_blank" rel="noopener noreferrer">telegram</a>
   <a href="https://instagram.com/theluststar" target="_blank" rel="noopener noreferrer">instagram</a>
-  <div class="music-toggle">
-    <button id="toggle" aria-pressed="false" aria-label="Toggle Music">
-      click to turn on music
-    </button>
-  </div>
 </div>
 
-<!-- Volume control slider top right -->
-<div id="volume-control" title="Volume control">
+<!-- Volume control slider top right, vertical -->
+<div id="volume-control" title="Volume control (0 = mute)">
   <input
     type="range"
     id="volume-slider"
@@ -196,49 +179,33 @@
   />
 </div>
 
-<p class="content">
-  update: i respond fastest on discord.<br /><br />
-  rest in peace @luststarclub on instagram
-</p>
-
 <audio id="music" loop src="audio/Music.mp3"></audio>
 
 <script>
   const music = document.getElementById('music');
-  const toggleBtn = document.getElementById('toggle');
   const volumeSlider = document.getElementById('volume-slider');
   let isPlaying = false;
 
-  // Toggle music playback
-  toggleBtn.addEventListener('click', () => {
-    if (isPlaying) {
+  // Initialize volume and play/pause accordingly
+  music.volume = volumeSlider.value;
+  if (music.volume > 0) {
+    music.play();
+    isPlaying = true;
+  }
+
+  volumeSlider.addEventListener('input', (e) => {
+    const vol = parseFloat(e.target.value);
+    music.volume = vol;
+    if (vol === 0) {
       music.pause();
+      isPlaying = false;
     } else {
-      music.play();
+      if (!isPlaying) {
+        music.play();
+        isPlaying = true;
+      }
     }
   });
-
-  // Update UI on play
-  music.onplaying = () => {
-    isPlaying = true;
-    toggleBtn.textContent = 'click to turn off music';
-    toggleBtn.setAttribute('aria-pressed', 'true');
-  };
-
-  // Update UI on pause
-  music.onpause = () => {
-    isPlaying = false;
-    toggleBtn.textContent = 'click to turn on music';
-    toggleBtn.setAttribute('aria-pressed', 'false');
-  };
-
-  // Volume control listener
-  volumeSlider.addEventListener('input', (e) => {
-    music.volume = e.target.value;
-  });
-
-  // Set initial volume
-  music.volume = volumeSlider.value;
 </script>
 
 </body>
