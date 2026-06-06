@@ -1,6 +1,3 @@
-my personal website project.
-learning html/css i guess ^_^
-https://luststar.club
+don't steal my website wtf
 
-[please don't fork or steal my project without at least asking me on discord: @luststar]
-
+ai exists now go use that instead
