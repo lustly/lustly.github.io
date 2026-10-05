@@ -11,18 +11,18 @@
     html, body {
       margin: 0;
       padding: 0;
-      height: 100%;
       width: 100%;
-      position: fixed;
-      overflow: hidden;
+      min-height: 100vh;      /* fallback */
+      min-height: 100dvh;     /* modern mobile-safe height */
       background: url('img/How.gif') center center / cover no-repeat;
       background-color: #000;
       font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       color: white;
+      overflow: hidden;
     }
 
     #links-container {
-      position: absolute;
+      position: fixed;
       top: 62%;
       left: 50%;
       transform: translateX(-50%);
@@ -102,7 +102,7 @@
 
     #mute-button {
       position: fixed;
-      bottom: env(safe-area-inset-bottom, 20px);
+      bottom: calc(20px + env(safe-area-inset-bottom, 0px));
       right: 20px;
       width: 52px;
       height: 52px;
@@ -134,6 +134,11 @@
     }
 
     @media (max-width: 600px) {
+      html, body {
+        background-size: cover;
+        background-position: center center;
+      }
+
       #links {
         gap: 26px;
         font-size: 22px;
@@ -173,7 +178,10 @@
     const muteBtn = document.getElementById('mute-button');
 
     music.volume = 0.2;
-    music.play();
+    music.play().catch(() => {
+      // Browsers block autoplay until user interaction — just reflect muted state
+      updateButton();
+    });
 
     function updateButton() {
       if (music.muted || music.volume === 0) {
@@ -189,7 +197,7 @@
       if (music.muted || music.volume === 0) {
         music.muted = false;
         if (music.volume === 0) music.volume = 0.2;
-        music.play();
+        music.play().catch(() => {});
       } else {
         music.muted = true;
         music.pause();
