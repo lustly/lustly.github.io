@@ -24,6 +24,25 @@
       overscroll-behavior: none;
     }
 
+    /* Bottom gradient so the frame is readable over the busy GIF */
+    body::after {
+      content: '';
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 45vh;
+      background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.92) 0%,
+        rgba(0, 0, 0, 0.7) 35%,
+        rgba(0, 0, 0, 0.25) 70%,
+        transparent 100%
+      );
+      pointer-events: none;
+      z-index: 5;
+    }
+
     /* -------- Frame -------- */
     #frame {
       position: fixed;
@@ -37,7 +56,7 @@
       white-space: pre;
       text-align: center;
       z-index: 10;
-      text-shadow: 0 0 3px rgba(0, 0, 0, 0.85), 0 1px 0 rgba(0, 0, 0, 0.7);
+      text-shadow: 0 0 4px #000, 0 0 8px #000, 0 1px 0 #000, 0 -1px 0 #000;
       user-select: none;
       -webkit-user-select: none;
     }
@@ -48,17 +67,18 @@
     }
 
     .link-item {
-      color: rgba(255, 255, 255, 0.9);
+      color: #fff;
       text-decoration: none;
       cursor: pointer;
       user-select: none;
       -webkit-user-select: none;
       transition: color 0.15s ease, text-shadow 0.15s ease;
+      text-shadow: 0 0 4px #000, 0 0 8px #000, 0 1px 0 #000, 0 -1px 0 #000;
     }
     .link-item:hover,
     .link-item:focus {
       color: #fff;
-      text-shadow: 0 0 6px rgba(255, 255, 255, 0.7), 0 0 3px rgba(0, 0, 0, 0.9);
+      text-shadow: 0 0 8px rgba(255, 255, 255, 0.9), 0 0 4px #000, 0 1px 0 #000, 0 -1px 0 #000;
       outline: none;
     }
 
@@ -80,18 +100,18 @@
       right: 24px;
       font-family: "Courier New", Courier, monospace;
       font-size: 15px;
-      color: rgba(255, 255, 255, 0.9);
+      color: #fff;
       cursor: pointer;
       user-select: none;
       -webkit-user-select: none;
       transition: color 0.15s ease, text-shadow 0.15s ease;
       z-index: 10;
-      text-shadow: 0 0 3px rgba(0, 0, 0, 0.85), 0 1px 0 rgba(0, 0, 0, 0.7);
+      text-shadow: 0 0 4px #000, 0 0 8px #000, 0 1px 0 #000, 0 -1px 0 #000;
     }
     #music-toggle:hover,
     #music-toggle:focus {
       color: #fff;
-      text-shadow: 0 0 6px rgba(255, 255, 255, 0.7), 0 0 3px rgba(0, 0, 0, 0.9);
+      text-shadow: 0 0 8px rgba(255, 255, 255, 0.9), 0 0 4px #000, 0 1px 0 #000, 0 -1px 0 #000;
       outline: none;
     }
 
@@ -100,18 +120,20 @@
     @media (max-width: 700px) {
       html, body { background-size: 110% auto; }
 
-      #frame { font-size: 11px; }
+      body::after { height: 50vh; }
 
-      #music-toggle { font-size: 11px; right: 12px; }
+      #frame { font-size: 12px; }
+
+      #music-toggle { font-size: 12px; right: 12px; }
     }
 
     @media (max-width: 480px) {
-      #frame { font-size: 9px; }
+      #frame { font-size: 10px; }
       #music-toggle { font-size: 10px; }
     }
 
     @media (max-width: 380px) {
-      #frame { font-size: 8px; }
+      #frame { font-size: 9px; }
     }
   </style>
 </head>
@@ -133,15 +155,14 @@
     // ============================================================
     // CONFIG
     // ============================================================
-    const TYPE_SPEED = 150;      // ms per character for link typing
-    const BORDER_SPEED = 25;     // ms per character for border typing
-    const DELETE_SPEED = 45;     // ms per character for backspace
-    const GAP_BETWEEN = 400;     // pause between links
+    const TYPE_SPEED = 150;
+    const BORDER_SPEED = 25;
+    const DELETE_SPEED = 45;
+    const GAP_BETWEEN = 400;
     const EMAIL = 'business@lust.lol';
 
-    // Layout constants (character counts)
-    const PAD = 2;               // spaces inside the frame
-    const GAP = 3;               // spaces between items
+    const PAD = 2;
+    const GAP = 3;
 
     const LINK_ITEMS = [
       { text: 'yt',      href: 'https://youtube.com/luststar' },
@@ -159,7 +180,7 @@
     const lineBottom = document.getElementById('line-bottom');
 
     // ============================================================
-    // COMPUTE BORDER STRING (fixed, calculated once at load)
+    // BORDER
     // ============================================================
     function computeBorder() {
       let inner = 0;
@@ -167,20 +188,19 @@
         inner += spec.text.length;
         if (idx < LINK_ITEMS.length - 1) inner += GAP;
       });
-      const middleLen = 2 + 2 * PAD + inner; // 2 for the bars, PAD on each side
-      const width = middleLen - 2;           // minus the two '+'
+      const middleLen = 2 + 2 * PAD + inner;
+      const width = middleLen - 2;
       return '+' + '-'.repeat(width) + '+';
     }
     const BORDER = computeBorder();
 
     // ============================================================
-    // BUILD THE MIDDLE ROW
+    // BUILD MIDDLE ROW
     // ============================================================
     const itemEls = [];
 
     (function buildMidRow() {
       lineMid.textContent = '';
-      // Left bar + padding
       lineMid.appendChild(document.createTextNode('|' + ' '.repeat(PAD)));
 
       LINK_ITEMS.forEach((spec, idx) => {
@@ -370,7 +390,6 @@
           setTimeout(type, TYPE_SPEED);
         } else {
           initialSequenceDone = true;
-          // Draw bottom border now that everything else is done
           typeStringInto(lineBottom, BORDER, BORDER_SPEED);
         }
       })();
@@ -448,13 +467,10 @@
     // ============================================================
     // KICK OFF
     // ============================================================
-    // 1. Type top border
     typeStringInto(lineTop, BORDER, BORDER_SPEED, () => {
-      // 2. Then start link sequence
       setTimeout(() => typeSequence(0), 150);
     });
 
-    // 3. Try autoplay
     try {
       const p = music.play();
       if (p && p.then) {
