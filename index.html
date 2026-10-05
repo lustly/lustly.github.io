@@ -5,166 +5,397 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#000000" />
   <title>luststar &lt;3</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
 
   <style>
     html, body {
       margin: 0;
       padding: 0;
       width: 100%;
-      min-height: 100vh;      /* fallback */
-      min-height: 100dvh;     /* mobile-safe height */
+      min-height: 100vh;
+      min-height: 100dvh;
       background-color: #000;
       background-image: url('img/How.gif');
-      background-repeat: repeat;      /* tile it */
+      background-repeat: repeat;
       background-position: center center;
-      background-size: 130% auto;     /* desktop value */
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background-size: 130% auto;
+      font-family: "Courier New", Courier, monospace;
       color: white;
       overflow: hidden;
     }
 
     #links-container {
       position: fixed;
-      top: 62%;
+      bottom: calc(28px + env(safe-area-inset-bottom, 0px));
       left: 50%;
       transform: translateX(-50%);
-      text-align: center;
-      user-select: none;
-      z-index: 1;
-    }
-
-    #links {
       display: flex;
-      justify-content: center;
-      gap: 40px;
-      font-size: 28px;
-      margin-bottom: 12px;
       flex-wrap: wrap;
-    }
-
-    #links a {
-      text-decoration: none;
-      opacity: 0;
-      animation: fadeIn 0.6s ease forwards, crtFlicker 2.5s infinite;
-      animation-delay: var(--delay);
-    }
-
-    #links a:nth-child(1) { --delay: 0.2s; }
-    #links a:nth-child(2) { --delay: 0.5s; }
-    #links a:nth-child(3) { --delay: 0.8s; }
-    #links a:nth-child(4) { --delay: 1.1s; }
-
-    @keyframes fadeIn { to { opacity: 1; } }
-
-    @keyframes crtFlicker {
-      0%, 100% { opacity: 0.95; }
-      10% { opacity: 1; }
-      20% { opacity: 0.92; }
-      30% { opacity: 0.98; }
-      40% { opacity: 1; }
-      50% { opacity: 0.93; }
-      60% { opacity: 1; }
-      70% { opacity: 0.95; }
-      80% { opacity: 0.98; }
-      90% { opacity: 0.96; }
-    }
-
-    .youtube { color: #FF0000; text-shadow: 0 0 4px #FF0000, 0 0 10px #FF3333, 0 0 16px #FF6666; }
-    .spotify { color: #1DB954; text-shadow: 0 0 4px #1DB954, 0 0 10px #24e07a, 0 0 16px #33ff99; }
-    .apple   { color: #FA57C1; text-shadow: 0 0 4px #FA57C1, 0 0 10px #ff85d6, 0 0 16px #ffaadf; }
-    .instagram { color: #E1306C; text-shadow: 0 0 4px #E1306C, 0 0 10px #ff4d88, 0 0 16px #ff6699; }
-
-    #contact {
-      font-size: 13px;
-      color: #888;
-      opacity: 0;
-      animation: fadeIn 1s ease forwards;
-      animation-delay: 1.4s;
-    }
-
-    #mute-button {
-      position: fixed;
-      bottom: calc(20px + env(safe-area-inset-bottom, 0px));
-      right: 20px;
-      width: 52px;
-      height: 52px;
-      background: rgba(0, 0, 0, 0.2);
-      border-radius: 50%;
-      border: none;
-      color: white;
-      font-size: 26px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
       justify-content: center;
-      transition: background 0.3s ease;
-      user-select: none;
-      opacity: 0;
-      animation: fadeIn 1s forwards;
-      animation-delay: 1.5s;
-      z-index: 1000;
+      gap: 28px;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 15px;
+      letter-spacing: 0.5px;
+      z-index: 10;
+      white-space: nowrap;
+      padding: 0 16px;
+      max-width: 100vw;
+      box-sizing: border-box;
     }
-    #mute-button:hover, #mute-button:focus { background: rgba(0, 0, 0, 0.4); outline: none; }
+
+    .link-item {
+      color: rgba(255, 255, 255, 0.78);
+      text-decoration: none;
+      transition: color 0.2s ease, text-shadow 0.2s ease;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .link-item:hover,
+    .link-item:focus {
+      color: #fff;
+      text-shadow: 0 0 6px rgba(255, 255, 255, 0.55);
+      outline: none;
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 1ch;
+      opacity: 1;
+    }
+    .cursor.blinking {
+      animation: blink 1s steps(1) infinite;
+    }
+    @keyframes blink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+
+    #music-toggle {
+      position: fixed;
+      bottom: calc(28px + env(safe-area-inset-bottom, 0px));
+      right: 24px;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 15px;
+      letter-spacing: 0.5px;
+      color: rgba(255, 255, 255, 0.78);
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+      transition: color 0.2s ease, text-shadow 0.2s ease;
+      z-index: 10;
+    }
+
+    #music-toggle:hover,
+    #music-toggle:focus {
+      color: #fff;
+      text-shadow: 0 0 6px rgba(255, 255, 255, 0.55);
+      outline: none;
+    }
 
     audio { display: none; }
 
-    /* Mobile: slightly zoomed so letters are bigger, still tiling */
     @media (max-width: 600px) {
-      html, body {
-        background-size: 110% auto;
-      }
+      html, body { background-size: 110% auto; }
 
-      #links { gap: 26px; font-size: 22px; }
-      #links-container { top: 66%; }
+      #links-container {
+        gap: 12px;
+        font-size: 11px;
+        bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+        padding: 0 10px;
+      }
+      #music-toggle {
+        font-size: 11px;
+        right: 12px;
+        bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+      }
+    }
+
+    @media (max-width: 380px) {
+      #links-container { gap: 8px; font-size: 10px; }
+      #music-toggle { font-size: 10px; }
     }
   </style>
 </head>
 <body>
 
   <div id="links-container">
-    <div id="links">
-      <a class="youtube" href="https://youtube.com/luststar" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
-      <a class="spotify" href="https://open.spotify.com/artist/4bP1qxGv79uyiXuUWfJew4?si=4d3abb9c525941e9" target="_blank" aria-label="Spotify"><i class="fab fa-spotify"></i></a>
-      <a class="apple" href="https://music.apple.com/us/artist/luststar/1527972241" target="_blank" aria-label="Apple Music"><i class="fab fa-apple"></i></a>
-      <a class="instagram" href="https://instagram.com/theluststar" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-    </div>
-    <div id="contact">contact: business@lust.lol</div>
+    <a class="link-item" href="https://youtube.com/luststar" target="_blank" rel="noopener" data-text="yt"></a>
+    <a class="link-item" href="https://open.spotify.com/artist/4bP1qxGv79uyiXuUWfJew4?si=4d3abb9c525941e9" target="_blank" rel="noopener" data-text="spotify"></a>
+    <a class="link-item" href="https://music.apple.com/us/artist/luststar/1527972241" target="_blank" rel="noopener" data-text="apple"></a>
+    <a class="link-item" href="https://instagram.com/theluststar" target="_blank" rel="noopener" data-text="ig"></a>
+    <span class="link-item" id="email-item" data-text="email" role="button" tabindex="0" aria-label="Copy email"></span>
   </div>
 
-  <button id="mute-button" aria-label="Mute/unmute music" title="Mute/unmute music" aria-pressed="false">🔈</button>
+  <div id="music-toggle" role="button" tabindex="0" aria-label="Toggle music">
+    <span id="music-text"></span><span class="cursor" id="music-cursor">_</span>
+  </div>
+
   <audio id="music" loop src="audio/Music.mp3"></audio>
 
   <script>
-    const music = document.getElementById('music');
-    const muteBtn = document.getElementById('mute-button');
+    // -------- Pacing --------
+    const TYPE_SPEED = 150;
+    const DELETE_SPEED = 45;
+    const GAP_BETWEEN = 400;
+    const EMAIL = 'business@lust.lol';
 
-    music.volume = 0.2;
-    music.play().catch(() => { updateButton(); });
+    // -------- Build each link item's inner DOM --------
+    const linkEls = document.querySelectorAll('.link-item');
+    const items = [];
 
-    function updateButton() {
-      if (music.muted || music.volume === 0) {
-        muteBtn.textContent = '🔇';
-        muteBtn.setAttribute('aria-pressed', 'true');
-      } else {
-        muteBtn.textContent = '🔈';
-        muteBtn.setAttribute('aria-pressed', 'false');
-      }
-    }
+    linkEls.forEach((el) => {
+      const label = document.createElement('span');
+      label.className = 'label';
 
-    muteBtn.addEventListener('click', () => {
-      if (music.muted || music.volume === 0) {
-        music.muted = false;
-        if (music.volume === 0) music.volume = 0.2;
-        music.play().catch(() => {});
-      } else {
-        music.muted = true;
-        music.pause();
-      }
-      updateButton();
+      const cursor = document.createElement('span');
+      cursor.className = 'cursor';
+      cursor.textContent = '_';
+
+      el.innerHTML = '';
+      el.appendChild(label);
+      el.appendChild(cursor);
+
+      items.push({
+        el,
+        label,
+        cursor,
+        target: el.dataset.text,
+        isEmail: el.id === 'email-item'
+      });
     });
 
-    updateButton();
+    // -------- Typing helpers --------
+    function typeItem(item, text, speed, onDone) {
+      item.label.textContent = '';
+      let i = 0;
+      (function step() {
+        if (i < text.length) {
+          item.label.textContent = text.slice(0, ++i);
+          setTimeout(step, speed);
+        } else {
+          onDone && onDone();
+        }
+      })();
+    }
+
+    function deleteItem(item, speed, onDone) {
+      const current = item.label.textContent;
+      let i = current.length;
+      (function step() {
+        if (i > 0) {
+          item.label.textContent = current.slice(0, --i);
+          setTimeout(step, speed);
+        } else {
+          onDone && onDone();
+        }
+      })();
+    }
+
+    // -------- Link sequence: left-to-right --------
+    function typeSequence(index) {
+      if (index >= items.length) {
+        startMusicSequence();
+        return;
+      }
+
+      const item = items[index];
+      item.cursor.classList.add('blinking');
+
+      typeItem(item, item.target, TYPE_SPEED, () => {
+        item.el.dataset.ready = 'true';
+        if (!item.isEmail) {
+          item.cursor.classList.remove('blinking');
+        }
+        setTimeout(() => typeSequence(index + 1), GAP_BETWEEN);
+      });
+    }
+
+    typeSequence(0);
+
+    // -------- Email click --------
+    const emailItem = items.find(i => i.isEmail);
+    let emailBusy = false;
+
+    function copyEmail() {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(EMAIL).catch(() => fallbackCopy(EMAIL));
+      } else {
+        fallbackCopy(EMAIL);
+      }
+    }
+    function fallbackCopy(text) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); } catch (e) {}
+      document.body.removeChild(ta);
+    }
+
+    function handleEmailClick() {
+      if (emailBusy) return;
+      if (emailItem.el.dataset.ready !== 'true') return;
+      emailBusy = true;
+
+      emailItem.cursor.classList.remove('blinking');
+
+      deleteItem(emailItem, 60, () => {
+        typeItem(emailItem, EMAIL, 55, () => {
+          copyEmail();
+          setTimeout(() => {
+            deleteItem(emailItem, 45, () => {
+              typeItem(emailItem, 'copied!', 55, () => {
+                setTimeout(() => {
+                  deleteItem(emailItem, 45, () => {
+                    typeItem(emailItem, 'email', 60, () => {
+                      emailItem.cursor.classList.add('blinking');
+                      emailBusy = false;
+                    });
+                  });
+                }, 900);
+              });
+            });
+          }, 800);
+        });
+      });
+    }
+
+    emailItem.el.addEventListener('click', handleEmailClick);
+    emailItem.el.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        handleEmailClick();
+      }
+    });
+
+    // -------- Music toggle --------
+    const music = document.getElementById('music');
+    const musicToggle = document.getElementById('music-toggle');
+    const musicText = document.getElementById('music-text');
+    const musicCursor = document.getElementById('music-cursor');
+
+    let musicBusy = false;
+    let musicIsOn = false;          // user intent / label state
+    let initialSequenceDone = false;
+
+    music.volume = 0.2;
+
+    // Intro typing (called after links finish)
+    function startMusicSequence() {
+      musicCursor.classList.add('blinking');
+      const target = musicIsOn ? 'music: on' : 'music: off';
+
+      let i = 0;
+      (function type() {
+        if (i < target.length) {
+          musicText.textContent = target.slice(0, ++i);
+          setTimeout(type, TYPE_SPEED);
+        } else {
+          initialSequenceDone = true;
+        }
+      })();
+    }
+
+    // ---- Label animation helper (delete + retype) ----
+    function animateMusicLabel(newLabel) {
+      const current = musicText.textContent;
+      let i = current.length;
+      (function del() {
+        if (i > 0) {
+          musicText.textContent = current.slice(0, --i);
+          setTimeout(del, DELETE_SPEED);
+        } else {
+          let j = 0;
+          (function type() {
+            if (j < newLabel.length) {
+              musicText.textContent = newLabel.slice(0, ++j);
+              setTimeout(type, TYPE_SPEED);
+            } else {
+              musicCursor.classList.add('blinking');
+              musicBusy = false;
+            }
+          })();
+        }
+      })();
+    }
+
+    function handleMusicToggle() {
+      if (musicBusy) return;
+      if (!initialSequenceDone) return;
+
+      musicBusy = true;
+      musicCursor.classList.remove('blinking');
+
+      // Flip our state
+      musicIsOn = !musicIsOn;
+      const target = musicIsOn ? 'music: on' : 'music: off';
+
+      // Apply to audio element. Errors do NOT revert musicIsOn here —
+      // the audio events below will resync if it truly fails.
+      try {
+        if (musicIsOn) {
+          music.muted = false;
+          if (music.volume === 0) music.volume = 0.2;
+          const p = music.play();
+          if (p && p.catch) {
+            p.catch((err) => console.warn('Playback blocked:', err));
+          }
+        } else {
+          music.muted = true;
+          music.pause();
+        }
+      } catch (e) {
+        console.warn('Audio toggle error:', e);
+      }
+
+      animateMusicLabel(target);
+    }
+
+    // Register listeners BEFORE any autoplay attempt
+    musicToggle.addEventListener('click', handleMusicToggle);
+    musicToggle.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        handleMusicToggle();
+      }
+    });
+
+    // ---- Auto-resync: keep label matching ACTUAL audio state ----
+    // If the browser fires 'play' or 'pause' and it disagrees with our
+    // label, correct the label (with the same animation).
+    function resyncLabelToAudio() {
+      const actuallyPlaying = !music.paused && !music.muted;
+      if (actuallyPlaying === musicIsOn) return; // already in sync
+      if (musicBusy) return;                    // don't interrupt an animation
+
+      musicIsOn = actuallyPlaying;
+      musicBusy = true;
+      musicCursor.classList.remove('blinking');
+      animateMusicLabel(musicIsOn ? 'music: on' : 'music: off');
+    }
+
+    music.addEventListener('play',  resyncLabelToAudio);
+    music.addEventListener('pause', resyncLabelToAudio);
+
+    // -------- Autoplay attempt (LAST) --------
+    try {
+      const p = music.play();
+      if (p && p.then) {
+        p.then(() => {
+          // Only adopt "on" if the user hasn't interacted yet
+          if (!initialSequenceDone) {
+            musicIsOn = true;
+          }
+        }).catch(() => {
+          // Autoplay blocked — leave musicIsOn as false (default)
+        });
+      }
+    } catch (e) {
+      // Ignore — musicIsOn stays false
+    }
   </script>
 
 </body>
