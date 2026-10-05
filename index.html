@@ -131,10 +131,11 @@
 
     audio { display: none; }
 
-    /* Mobile: show the FULL gif so "LUSTSTAR" is never cropped */
+    /* Mobile: scale GIF to fill screen HEIGHT so LUSTSTAR letters are large.
+       Sides crop, but the text is centered so it stays intact. */
     @media (max-width: 600px) {
       html, body {
-        background-size: contain; /* whole image always visible */
+        background-size: auto 100%;   /* height-fit, width auto (crops sides) */
         background-position: center center;
       }
 
@@ -145,13 +146,6 @@
 
       #links-container {
         top: 66%;
-      }
-    }
-
-    /* Optional: for very wide / short landscape phones too */
-    @media (orientation: landscape) and (max-height: 500px) {
-      html, body {
-        background-size: contain;
       }
     }
   </style>
