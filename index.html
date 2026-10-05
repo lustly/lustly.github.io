@@ -14,8 +14,11 @@
       width: 100%;
       min-height: 100vh;      /* fallback */
       min-height: 100dvh;     /* modern mobile-safe height */
-      background: url('img/How.gif') center center / cover no-repeat;
       background-color: #000;
+      background-image: url('img/How.gif');
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: cover; /* desktop default */
       font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       color: white;
       overflow: hidden;
@@ -53,9 +56,7 @@
     #links a:nth-child(4) { --delay: 1.1s; }
 
     @keyframes fadeIn {
-      to {
-        opacity: 1;
-      }
+      to { opacity: 1; }
     }
 
     @keyframes crtFlicker {
@@ -71,7 +72,6 @@
       90% { opacity: 0.96; }
     }
 
-    /* Brand Glows */
     .youtube {
       color: #FF0000;
       text-shadow: 0 0 4px #FF0000, 0 0 10px #FF3333, 0 0 16px #FF6666;
@@ -129,13 +129,12 @@
       outline: none;
     }
 
-    audio {
-      display: none;
-    }
+    audio { display: none; }
 
+    /* Mobile: show the FULL gif so "LUSTSTAR" is never cropped */
     @media (max-width: 600px) {
       html, body {
-        background-size: cover;
+        background-size: contain; /* whole image always visible */
         background-position: center center;
       }
 
@@ -146,6 +145,13 @@
 
       #links-container {
         top: 66%;
+      }
+    }
+
+    /* Optional: for very wide / short landscape phones too */
+    @media (orientation: landscape) and (max-height: 500px) {
+      html, body {
+        background-size: contain;
       }
     }
   </style>
@@ -179,7 +185,6 @@
 
     music.volume = 0.2;
     music.play().catch(() => {
-      // Browsers block autoplay until user interaction — just reflect muted state
       updateButton();
     });
 
