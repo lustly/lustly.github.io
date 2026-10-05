@@ -21,40 +21,44 @@
       font-family: "Courier New", Courier, monospace;
       color: white;
       overflow: hidden;
+      overscroll-behavior: none;
     }
 
-    #links-container {
+    /* -------- Frame -------- */
+    #frame {
       position: fixed;
       bottom: calc(28px + env(safe-area-inset-bottom, 0px));
       left: 50%;
       transform: translateX(-50%);
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 28px;
       font-family: "Courier New", Courier, monospace;
       font-size: 15px;
-      letter-spacing: 0.5px;
+      line-height: 1.2;
+      color: #fff;
+      white-space: pre;
+      text-align: center;
       z-index: 10;
-      white-space: nowrap;
-      padding: 0 16px;
-      max-width: 100vw;
-      box-sizing: border-box;
-    }
-
-    .link-item {
-      color: rgba(255, 255, 255, 0.78);
-      text-decoration: none;
-      transition: color 0.2s ease, text-shadow 0.2s ease;
-      cursor: pointer;
+      text-shadow: 0 0 3px rgba(0, 0, 0, 0.85), 0 1px 0 rgba(0, 0, 0, 0.7);
       user-select: none;
       -webkit-user-select: none;
     }
 
+    #frame .line {
+      display: block;
+      white-space: pre;
+    }
+
+    .link-item {
+      color: rgba(255, 255, 255, 0.9);
+      text-decoration: none;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+      transition: color 0.15s ease, text-shadow 0.15s ease;
+    }
     .link-item:hover,
     .link-item:focus {
       color: #fff;
-      text-shadow: 0 0 6px rgba(255, 255, 255, 0.55);
+      text-shadow: 0 0 6px rgba(255, 255, 255, 0.7), 0 0 3px rgba(0, 0, 0, 0.9);
       outline: none;
     }
 
@@ -63,68 +67,60 @@
       width: 1ch;
       opacity: 1;
     }
-    .cursor.blinking {
-      animation: blink 1s steps(1) infinite;
-    }
+    .cursor.blinking { animation: blink 1s steps(1) infinite; }
     @keyframes blink {
       0%, 49% { opacity: 1; }
       50%, 100% { opacity: 0; }
     }
 
+    /* -------- Music toggle -------- */
     #music-toggle {
       position: fixed;
       bottom: calc(28px + env(safe-area-inset-bottom, 0px));
       right: 24px;
       font-family: "Courier New", Courier, monospace;
       font-size: 15px;
-      letter-spacing: 0.5px;
-      color: rgba(255, 255, 255, 0.78);
+      color: rgba(255, 255, 255, 0.9);
       cursor: pointer;
       user-select: none;
       -webkit-user-select: none;
-      transition: color 0.2s ease, text-shadow 0.2s ease;
+      transition: color 0.15s ease, text-shadow 0.15s ease;
       z-index: 10;
+      text-shadow: 0 0 3px rgba(0, 0, 0, 0.85), 0 1px 0 rgba(0, 0, 0, 0.7);
     }
-
     #music-toggle:hover,
     #music-toggle:focus {
       color: #fff;
-      text-shadow: 0 0 6px rgba(255, 255, 255, 0.55);
+      text-shadow: 0 0 6px rgba(255, 255, 255, 0.7), 0 0 3px rgba(0, 0, 0, 0.9);
       outline: none;
     }
 
     audio { display: none; }
 
-    @media (max-width: 600px) {
+    @media (max-width: 700px) {
       html, body { background-size: 110% auto; }
 
-      #links-container {
-        gap: 12px;
-        font-size: 11px;
-        bottom: calc(24px + env(safe-area-inset-bottom, 0px));
-        padding: 0 10px;
-      }
-      #music-toggle {
-        font-size: 11px;
-        right: 12px;
-        bottom: calc(24px + env(safe-area-inset-bottom, 0px));
-      }
+      #frame { font-size: 11px; }
+
+      #music-toggle { font-size: 11px; right: 12px; }
+    }
+
+    @media (max-width: 480px) {
+      #frame { font-size: 9px; }
+      #music-toggle { font-size: 10px; }
     }
 
     @media (max-width: 380px) {
-      #links-container { gap: 8px; font-size: 10px; }
-      #music-toggle { font-size: 10px; }
+      #frame { font-size: 8px; }
     }
   </style>
 </head>
 <body>
 
-  <div id="links-container">
-    <a class="link-item" href="https://youtube.com/luststar" target="_blank" rel="noopener" data-text="yt"></a>
-    <a class="link-item" href="https://open.spotify.com/artist/4bP1qxGv79uyiXuUWfJew4?si=4d3abb9c525941e9" target="_blank" rel="noopener" data-text="spotify"></a>
-    <a class="link-item" href="https://music.apple.com/us/artist/luststar/1527972241" target="_blank" rel="noopener" data-text="apple"></a>
-    <a class="link-item" href="https://instagram.com/theluststar" target="_blank" rel="noopener" data-text="ig"></a>
-    <span class="link-item" id="email-item" data-text="email" role="button" tabindex="0" aria-label="Copy email"></span>
+  <div id="frame">
+    <span class="line" id="line-top"></span>
+    <span class="line" id="line-mid"></span>
+    <span class="line" id="line-bottom"></span>
   </div>
 
   <div id="music-toggle" role="button" tabindex="0" aria-label="Toggle music">
@@ -134,38 +130,115 @@
   <audio id="music" loop src="audio/Music.mp3"></audio>
 
   <script>
-    // -------- Pacing --------
-    const TYPE_SPEED = 150;
-    const DELETE_SPEED = 45;
-    const GAP_BETWEEN = 400;
+    // ============================================================
+    // CONFIG
+    // ============================================================
+    const TYPE_SPEED = 150;      // ms per character for link typing
+    const BORDER_SPEED = 25;     // ms per character for border typing
+    const DELETE_SPEED = 45;     // ms per character for backspace
+    const GAP_BETWEEN = 400;     // pause between links
     const EMAIL = 'business@lust.lol';
 
-    // -------- Build each link item's inner DOM --------
-    const linkEls = document.querySelectorAll('.link-item');
-    const items = [];
+    // Layout constants (character counts)
+    const PAD = 2;               // spaces inside the frame
+    const GAP = 3;               // spaces between items
 
-    linkEls.forEach((el) => {
-      const label = document.createElement('span');
-      label.className = 'label';
+    const LINK_ITEMS = [
+      { text: 'yt',      href: 'https://youtube.com/luststar' },
+      { text: 'spotify', href: 'https://open.spotify.com/artist/4bP1qxGv79uyiXuUWfJew4?si=4d3abb9c525941e9' },
+      { text: 'apple',   href: 'https://music.apple.com/us/artist/luststar/1527972241' },
+      { text: 'ig',      href: 'https://instagram.com/theluststar' },
+      { text: 'email',   href: null }
+    ];
 
-      const cursor = document.createElement('span');
-      cursor.className = 'cursor';
-      cursor.textContent = '_';
+    // ============================================================
+    // ELEMENTS
+    // ============================================================
+    const lineTop    = document.getElementById('line-top');
+    const lineMid    = document.getElementById('line-mid');
+    const lineBottom = document.getElementById('line-bottom');
 
-      el.innerHTML = '';
-      el.appendChild(label);
-      el.appendChild(cursor);
-
-      items.push({
-        el,
-        label,
-        cursor,
-        target: el.dataset.text,
-        isEmail: el.id === 'email-item'
+    // ============================================================
+    // COMPUTE BORDER STRING (fixed, calculated once at load)
+    // ============================================================
+    function computeBorder() {
+      let inner = 0;
+      LINK_ITEMS.forEach((spec, idx) => {
+        inner += spec.text.length;
+        if (idx < LINK_ITEMS.length - 1) inner += GAP;
       });
-    });
+      const middleLen = 2 + 2 * PAD + inner; // 2 for the bars, PAD on each side
+      const width = middleLen - 2;           // minus the two '+'
+      return '+' + '-'.repeat(width) + '+';
+    }
+    const BORDER = computeBorder();
 
-    // -------- Typing helpers --------
+    // ============================================================
+    // BUILD THE MIDDLE ROW
+    // ============================================================
+    const itemEls = [];
+
+    (function buildMidRow() {
+      lineMid.textContent = '';
+      // Left bar + padding
+      lineMid.appendChild(document.createTextNode('|' + ' '.repeat(PAD)));
+
+      LINK_ITEMS.forEach((spec, idx) => {
+        const el = document.createElement(spec.href ? 'a' : 'span');
+        if (spec.href) {
+          el.href = spec.href;
+          el.target = '_blank';
+          el.rel = 'noopener';
+        } else {
+          el.setAttribute('role', 'button');
+          el.tabIndex = 0;
+          el.setAttribute('aria-label', 'Copy email');
+          el.id = 'email-item';
+        }
+        el.className = 'link-item';
+        el.dataset.text = spec.text;
+
+        const label = document.createElement('span');
+        label.className = 'label';
+
+        const cursor = document.createElement('span');
+        cursor.className = 'cursor';
+        cursor.textContent = '';
+
+        el.appendChild(label);
+        el.appendChild(cursor);
+        lineMid.appendChild(el);
+
+        itemEls.push({
+          el, label, cursor,
+          target: spec.text,
+          isEmail: !spec.href
+        });
+
+        if (idx < LINK_ITEMS.length - 1) {
+          lineMid.appendChild(document.createTextNode(' '.repeat(GAP)));
+        }
+      });
+
+      lineMid.appendChild(document.createTextNode(' '.repeat(PAD) + '|'));
+    })();
+
+    // ============================================================
+    // TYPING HELPERS
+    // ============================================================
+    function typeStringInto(el, str, speed, onDone) {
+      el.textContent = '';
+      let i = 0;
+      (function step() {
+        if (i < str.length) {
+          el.textContent = str.slice(0, ++i);
+          setTimeout(step, speed);
+        } else {
+          onDone && onDone();
+        }
+      })();
+    }
+
     function typeItem(item, text, speed, onDone) {
       item.label.textContent = '';
       let i = 0;
@@ -192,14 +265,16 @@
       })();
     }
 
-    // -------- Link sequence: left-to-right --------
+    // ============================================================
+    // LINK SEQUENCE
+    // ============================================================
     function typeSequence(index) {
-      if (index >= items.length) {
+      if (index >= itemEls.length) {
         startMusicSequence();
         return;
       }
-
-      const item = items[index];
+      const item = itemEls[index];
+      item.cursor.textContent = '_';
       item.cursor.classList.add('blinking');
 
       typeItem(item, item.target, TYPE_SPEED, () => {
@@ -211,10 +286,10 @@
       });
     }
 
-    typeSequence(0);
-
-    // -------- Email click --------
-    const emailItem = items.find(i => i.isEmail);
+    // ============================================================
+    // EMAIL CLICK
+    // ============================================================
+    const emailItem = itemEls.find(i => i.isEmail);
     let emailBusy = false;
 
     function copyEmail() {
@@ -239,7 +314,6 @@
       if (emailBusy) return;
       if (emailItem.el.dataset.ready !== 'true') return;
       emailBusy = true;
-
       emailItem.cursor.classList.remove('blinking');
 
       deleteItem(emailItem, 60, () => {
@@ -271,23 +345,24 @@
       }
     });
 
-    // -------- Music toggle --------
+    // ============================================================
+    // MUSIC TOGGLE
+    // ============================================================
     const music = document.getElementById('music');
     const musicToggle = document.getElementById('music-toggle');
     const musicText = document.getElementById('music-text');
     const musicCursor = document.getElementById('music-cursor');
 
     let musicBusy = false;
-    let musicIsOn = false;          // user intent / label state
+    let musicIsOn = false;
     let initialSequenceDone = false;
 
     music.volume = 0.2;
 
-    // Intro typing (called after links finish)
     function startMusicSequence() {
+      musicCursor.textContent = '_';
       musicCursor.classList.add('blinking');
       const target = musicIsOn ? 'music: on' : 'music: off';
-
       let i = 0;
       (function type() {
         if (i < target.length) {
@@ -295,11 +370,12 @@
           setTimeout(type, TYPE_SPEED);
         } else {
           initialSequenceDone = true;
+          // Draw bottom border now that everything else is done
+          typeStringInto(lineBottom, BORDER, BORDER_SPEED);
         }
       })();
     }
 
-    // ---- Label animation helper (delete + retype) ----
     function animateMusicLabel(newLabel) {
       const current = musicText.textContent;
       let i = current.length;
@@ -325,24 +401,18 @@
     function handleMusicToggle() {
       if (musicBusy) return;
       if (!initialSequenceDone) return;
-
       musicBusy = true;
       musicCursor.classList.remove('blinking');
 
-      // Flip our state
       musicIsOn = !musicIsOn;
       const target = musicIsOn ? 'music: on' : 'music: off';
 
-      // Apply to audio element. Errors do NOT revert musicIsOn here —
-      // the audio events below will resync if it truly fails.
       try {
         if (musicIsOn) {
           music.muted = false;
           if (music.volume === 0) music.volume = 0.2;
           const p = music.play();
-          if (p && p.catch) {
-            p.catch((err) => console.warn('Playback blocked:', err));
-          }
+          if (p && p.catch) p.catch((err) => console.warn('Playback blocked:', err));
         } else {
           music.muted = true;
           music.pause();
@@ -354,7 +424,6 @@
       animateMusicLabel(target);
     }
 
-    // Register listeners BEFORE any autoplay attempt
     musicToggle.addEventListener('click', handleMusicToggle);
     musicToggle.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
@@ -363,39 +432,37 @@
       }
     });
 
-    // ---- Auto-resync: keep label matching ACTUAL audio state ----
-    // If the browser fires 'play' or 'pause' and it disagrees with our
-    // label, correct the label (with the same animation).
     function resyncLabelToAudio() {
       const actuallyPlaying = !music.paused && !music.muted;
-      if (actuallyPlaying === musicIsOn) return; // already in sync
-      if (musicBusy) return;                    // don't interrupt an animation
-
+      if (actuallyPlaying === musicIsOn) return;
+      if (musicBusy) return;
+      if (!initialSequenceDone) return;
       musicIsOn = actuallyPlaying;
       musicBusy = true;
       musicCursor.classList.remove('blinking');
       animateMusicLabel(musicIsOn ? 'music: on' : 'music: off');
     }
-
     music.addEventListener('play',  resyncLabelToAudio);
     music.addEventListener('pause', resyncLabelToAudio);
 
-    // -------- Autoplay attempt (LAST) --------
+    // ============================================================
+    // KICK OFF
+    // ============================================================
+    // 1. Type top border
+    typeStringInto(lineTop, BORDER, BORDER_SPEED, () => {
+      // 2. Then start link sequence
+      setTimeout(() => typeSequence(0), 150);
+    });
+
+    // 3. Try autoplay
     try {
       const p = music.play();
       if (p && p.then) {
         p.then(() => {
-          // Only adopt "on" if the user hasn't interacted yet
-          if (!initialSequenceDone) {
-            musicIsOn = true;
-          }
-        }).catch(() => {
-          // Autoplay blocked — leave musicIsOn as false (default)
-        });
+          if (!initialSequenceDone) musicIsOn = true;
+        }).catch(() => {});
       }
-    } catch (e) {
-      // Ignore — musicIsOn stays false
-    }
+    } catch (e) {}
   </script>
 
 </body>
