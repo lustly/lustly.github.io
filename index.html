@@ -18,7 +18,7 @@
       background-image: url('img/How.gif');
       background-repeat: repeat;      /* tile it */
       background-position: center center;
-      background-size: 130% auto;     /* start value — tune below */
+      background-size: 130% auto;     /* desktop value */
       font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       color: white;
       overflow: hidden;
@@ -109,10 +109,10 @@
 
     audio { display: none; }
 
-    /* Mobile: zoom in so letters r still visible */
+    /* Mobile: fit GIF width to screen so full "LUSTSTAR" is visible, tile vertically */
     @media (max-width: 600px) {
       html, body {
-        background-size: 160% auto;
+        background-size: 100% auto;
       }
 
       #links { gap: 26px; font-size: 22px; }
