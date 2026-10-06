@@ -24,7 +24,7 @@
       overscroll-behavior: none;
     }
 
-    /* Lighter bottom gradient — just enough to lift the frame */
+    /* Bottom gradient so the frame is readable over the busy GIF */
     body::after {
       content: '';
       position: fixed;
@@ -41,6 +41,20 @@
       );
       pointer-events: none;
       z-index: 5;
+    }
+
+    /* Full-screen black overlay for page transitions */
+    #transition-overlay {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      z-index: 9000;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+    #transition-overlay.active {
+      opacity: 1;
     }
 
     /* -------- Frame -------- */
@@ -62,7 +76,6 @@
       transition: opacity 0.4s ease, transform 0.4s ease;
     }
 
-    /* Exit animation */
     #frame.exit {
       opacity: 0;
       transform: translateX(-50%) translateY(30px) scale(0.95);
@@ -115,9 +128,7 @@
       z-index: 10;
       text-shadow: 0 0 4px #000, 0 0 8px #000, 0 1px 0 #000, 0 -1px 0 #000;
     }
-    #music-toggle.exit {
-      opacity: 0;
-    }
+    #music-toggle.exit { opacity: 0; }
     #music-toggle:hover,
     #music-toggle:focus {
       color: #fff;
@@ -129,25 +140,22 @@
 
     @media (max-width: 700px) {
       html, body { background-size: 110% auto; }
-
       body::after { height: 38vh; }
-
       #frame { font-size: 12px; }
-
       #music-toggle { font-size: 12px; right: 12px; }
     }
-
     @media (max-width: 480px) {
       #frame { font-size: 10px; }
       #music-toggle { font-size: 10px; }
     }
-
     @media (max-width: 380px) {
       #frame { font-size: 9px; }
     }
   </style>
 </head>
 <body>
+
+  <div id="transition-overlay"></div>
 
   <div id="frame">
     <span class="line" id="line-top"></span>
@@ -167,7 +175,6 @@
     const DELETE_SPEED = 45;
     const GAP_BETWEEN = 400;
     const EMAIL = 'business@lust.lol';
-
     const PAD = 2;
     const GAP = 3;
 
@@ -183,6 +190,7 @@
     const lineTop    = document.getElementById('line-top');
     const lineMid    = document.getElementById('line-mid');
     const lineBottom = document.getElementById('line-bottom');
+    const overlay    = document.getElementById('transition-overlay');
 
     function computeBorder() {
       let inner = 0;
@@ -222,7 +230,6 @@
 
         const label = document.createElement('span');
         label.className = 'label';
-
         const cursor = document.createElement('span');
         cursor.className = 'cursor';
         cursor.textContent = '';
@@ -253,12 +260,9 @@
         if (i < str.length) {
           el.textContent = str.slice(0, ++i);
           setTimeout(step, speed);
-        } else {
-          onDone && onDone();
-        }
+        } else { onDone && onDone(); }
       })();
     }
-
     function typeItem(item, text, speed, onDone) {
       item.label.textContent = '';
       let i = 0;
@@ -266,12 +270,9 @@
         if (i < text.length) {
           item.label.textContent = text.slice(0, ++i);
           setTimeout(step, speed);
-        } else {
-          onDone && onDone();
-        }
+        } else { onDone && onDone(); }
       })();
     }
-
     function deleteItem(item, speed, onDone) {
       const current = item.label.textContent;
       let i = current.length;
@@ -279,32 +280,25 @@
         if (i > 0) {
           item.label.textContent = current.slice(0, --i);
           setTimeout(step, speed);
-        } else {
-          onDone && onDone();
-        }
+        } else { onDone && onDone(); }
       })();
     }
 
     function typeSequence(index) {
-      if (index >= itemEls.length) {
-        startMusicSequence();
-        return;
-      }
+      if (index >= itemEls.length) { startMusicSequence(); return; }
       const item = itemEls[index];
       item.cursor.textContent = '_';
       item.cursor.classList.add('blinking');
 
       typeItem(item, item.target, TYPE_SPEED, () => {
         item.el.dataset.ready = 'true';
-        if (!item.isEmail) {
-          item.cursor.classList.remove('blinking');
-        }
+        if (!item.isEmail) item.cursor.classList.remove('blinking');
         setTimeout(() => typeSequence(index + 1), GAP_BETWEEN);
       });
     }
 
     // ============================================================
-    // INTERNAL LINK EXIT ANIMATION
+    // INTERNAL LINK EXIT ANIMATION + FADE
     // ============================================================
     const frameEl = document.getElementById('frame');
     const musicToggleEl = document.getElementById('music-toggle');
@@ -315,6 +309,8 @@
       leaving = true;
       frameEl.classList.add('exit');
       musicToggleEl.classList.add('exit');
+      overlay.classList.add('active');
+
       setTimeout(() => {
         window.location.href = href;
       }, 450);
@@ -337,9 +333,7 @@
     function copyEmail() {
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(EMAIL).catch(() => fallbackCopy(EMAIL));
-      } else {
-        fallbackCopy(EMAIL);
-      }
+      } else { fallbackCopy(EMAIL); }
     }
     function fallbackCopy(text) {
       const ta = document.createElement('textarea');
@@ -457,9 +451,7 @@
           music.muted = true;
           music.pause();
         }
-      } catch (e) {
-        console.warn('Audio toggle error:', e);
-      }
+      } catch (e) { console.warn('Audio toggle error:', e); }
 
       animateMusicLabel(target);
     }
@@ -484,6 +476,19 @@
     }
     music.addEventListener('play',  resyncLabelToAudio);
     music.addEventListener('pause', resyncLabelToAudio);
+
+    // ============================================================
+    // ENTRY: fade overlay out on load
+    // ============================================================
+    // Start with overlay fully opaque, then remove .active so it fades out
+    overlay.style.transition = 'none';
+    overlay.classList.add('active');
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        overlay.style.transition = '';
+        overlay.classList.remove('active');
+      });
+    });
 
     // ============================================================
     // KICK OFF
