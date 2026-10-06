@@ -59,6 +59,13 @@
       text-shadow: 0 0 4px #000, 0 0 8px #000, 0 1px 0 #000, 0 -1px 0 #000;
       user-select: none;
       -webkit-user-select: none;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    /* Exit animation */
+    #frame.exit {
+      opacity: 0;
+      transform: translateX(-50%) translateY(30px) scale(0.95);
     }
 
     #frame .line {
@@ -104,9 +111,12 @@
       cursor: pointer;
       user-select: none;
       -webkit-user-select: none;
-      transition: color 0.15s ease, text-shadow 0.15s ease;
+      transition: color 0.15s ease, text-shadow 0.15s ease, opacity 0.4s ease;
       z-index: 10;
       text-shadow: 0 0 4px #000, 0 0 8px #000, 0 1px 0 #000, 0 -1px 0 #000;
+    }
+    #music-toggle.exit {
+      opacity: 0;
     }
     #music-toggle:hover,
     #music-toggle:focus {
@@ -166,6 +176,7 @@
       { text: 'spotify', href: 'https://open.spotify.com/artist/4bP1qxGv79uyiXuUWfJew4?si=4d3abb9c525941e9' },
       { text: 'apple',   href: 'https://music.apple.com/us/artist/luststar/1527972241' },
       { text: 'ig',      href: 'https://instagram.com/theluststar' },
+      { text: 'music',   href: '/music/' },
       { text: 'email',   href: null }
     ];
 
@@ -194,9 +205,12 @@
       LINK_ITEMS.forEach((spec, idx) => {
         const el = document.createElement(spec.href ? 'a' : 'span');
         if (spec.href) {
+          const isInternal = spec.href.startsWith('/');
           el.href = spec.href;
-          el.target = '_blank';
-          el.rel = 'noopener';
+          if (!isInternal) {
+            el.target = '_blank';
+            el.rel = 'noopener';
+          }
         } else {
           el.setAttribute('role', 'button');
           el.tabIndex = 0;
@@ -220,7 +234,8 @@
         itemEls.push({
           el, label, cursor,
           target: spec.text,
-          isEmail: !spec.href
+          isEmail: !spec.href,
+          isInternalLink: spec.href && spec.href.startsWith('/')
         });
 
         if (idx < LINK_ITEMS.length - 1) {
@@ -288,6 +303,34 @@
       });
     }
 
+    // ============================================================
+    // INTERNAL LINK EXIT ANIMATION
+    // ============================================================
+    const frameEl = document.getElementById('frame');
+    const musicToggleEl = document.getElementById('music-toggle');
+    let leaving = false;
+
+    function exitTo(href) {
+      if (leaving) return;
+      leaving = true;
+      frameEl.classList.add('exit');
+      musicToggleEl.classList.add('exit');
+      setTimeout(() => {
+        window.location.href = href;
+      }, 450);
+    }
+
+    itemEls.forEach((item) => {
+      if (!item.isInternalLink) return;
+      item.el.addEventListener('click', (e) => {
+        e.preventDefault();
+        exitTo(item.el.getAttribute('href'));
+      });
+    });
+
+    // ============================================================
+    // EMAIL CLICK
+    // ============================================================
     const emailItem = itemEls.find(i => i.isEmail);
     let emailBusy = false;
 
@@ -344,8 +387,10 @@
       }
     });
 
+    // ============================================================
+    // MUSIC TOGGLE
+    // ============================================================
     const music = document.getElementById('music');
-    const musicToggle = document.getElementById('music-toggle');
     const musicText = document.getElementById('music-text');
     const musicCursor = document.getElementById('music-cursor');
 
@@ -419,8 +464,8 @@
       animateMusicLabel(target);
     }
 
-    musicToggle.addEventListener('click', handleMusicToggle);
-    musicToggle.addEventListener('keydown', (e) => {
+    musicToggleEl.addEventListener('click', handleMusicToggle);
+    musicToggleEl.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
         handleMusicToggle();
@@ -440,6 +485,9 @@
     music.addEventListener('play',  resyncLabelToAudio);
     music.addEventListener('pause', resyncLabelToAudio);
 
+    // ============================================================
+    // KICK OFF
+    // ============================================================
     typeStringInto(lineTop, BORDER, BORDER_SPEED, () => {
       setTimeout(() => typeSequence(0), 150);
     });
