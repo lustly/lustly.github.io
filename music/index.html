@@ -1,1 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#000000" />
+  <title>luststar // music</title>
 
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      min-height: 100vh;
+      min-height: 100dvh;
+      background-color: #000;
+      font-family: "Courier New", Courier, monospace;
+      color: #fff;
+      overflow-x: hidden;
+      overscroll-behavior: none;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 20px;
+      box-sizing: border-box;
+    }
+
+    #stage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    #stage.enter-start {
+      opacity: 0;
+      transform: translateY(-30px) scale(0.95);
+    }
+
+    #stage.exit {
+      opacity: 0;
+      transform: translateY(30px) scale(0.95);
+    }
+
+    #banner {
+      font-family: "Courier New", Courier, monospace;
+      font-size: 13px;
+      line-height: 1.05;
+      color: #fff;
+      white-space: pre;
+      text-align: center;
+      margin-bottom: 32px;
+      user-select: none;
+      -webkit-user-select: none;
+      transition: text-shadow 0.4s ease;
+      text-shadow: 0 0 4px #000, 0 0 8px #000;
+    }
+
+    #banner.glowing {
+      text-shadow:
+        0 0 6px rgba(255, 255, 255, 0.85),
+        0 0 14px rgba(255, 255, 255, 0.55),
+        0 0 4px #000,
+        0 0 8px #000;
+    }
+
+    #banner-mobile {
+      display: none;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 18px;
+      letter-spacing: 0.6em;
+      color: #fff;
+      text-align: center;
+      margin-bottom: 28px;
+      user-select: none;
+      -webkit-user-select: none;
+      padding-left: 0.6em;
+      opacity: 0;
+      transition: opacity 0.8s ease, text-shadow 0.4s ease;
+      text-shadow: 0 0 4px #000, 0 0 8px #000;
+    }
+
+    #banner-mobile.visible { opacity: 1; }
+
+    #banner-mobile.glowing {
+      text-shadow:
+        0 0 6px rgba(255, 255, 255, 0.85),
+        0 0 14px rgba(255, 255, 255, 0.55),
+        0 0 4px #000,
+        0 0 8px #000;
+    }
+
+    #frame {
+      font-family: "Courier New", Courier, monospace;
+      font-size: 15px;
+      line-height: 1.4;
+      color: #fff;
+      white-space: pre;
+      text-align: center;
+      user-select: none;
+      -webkit-user-select: none;
+      max-width: 100%;
+    }
+
+    #frame .line { display: block; white-space: pre; }
+
+    .track {
+      color: rgba(255, 255, 255, 0.85);
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+      transition: color 0.15s ease, text-shadow 0.15s ease;
+      white-space: pre;
+    }
+    .track:hover,
+    .track:focus {
+      color: #fff;
+      text-shadow: 0 0 6px rgba(255, 255, 255, 0.6);
+      outline: none;
+    }
+    .track.playing {
+      color: #fff;
+      text-shadow: 0 0 8px rgba(255, 255, 255, 0.85);
+    }
+
+    #player {
+      margin-top: 24px;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 14px;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.85);
+      text-align: center;
+      user-select: none;
+      -webkit-user-select: none;
+      white-space: pre;
+    }
+    #player .row { display: block; white-space: pre; }
+    #player .controls-row { margin-bottom: 4px; }
+    #player .ctrl {
+      display: inline-block;
+      cursor: pointer;
+      padding: 0 4px;
+      transition: color 0.15s ease, text-shadow 0.15s ease;
+    }
+    #player .ctrl:hover,
+    #player .ctrl:focus {
+      color: #fff;
+      text-shadow: 0 0 6px rgba(255, 255, 255, 0.6);
+      outline: none;
+    }
+    #player .now-playing { color: #fff; opacity: 0.9; margin-bottom: 4px; }
+    #player .bar { cursor: pointer; white-space: pre; letter-spacing: 0; }
+    #player .bar .fill { color: #fff; }
+    #player .bar .empty { color: rgba(255, 255, 255, 0.35); }
+
+    #back {
+      position: fixed;
+      bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+      left: 20px;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      transition: color 0.15s ease, text-shadow 0.15s ease, opacity 0.4s ease;
+      z-index: 10;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    #back:hover,
+    #back:focus {
+      color: #fff;
+      text-shadow: 0 0 6px rgba(255, 255, 255, 0.6);
+      outline: none;
+    }
+    #back.enter-start { opacity: 0; }
+    #back.exit { opacity: 0; }
+
+    audio { display: none; }
+
+    @media (max-width: 700px) {
+      #banner { display: none; }
+      #banner-mobile { display: block; font-size: 16px; }
+      #frame { font-size: 11px; }
+      #player { font-size: 11px; margin-top: 18px; }
+      #back { font-size: 12px; left: 12px; }
+    }
+    @media (max-width: 480px) {
+      #banner-mobile { font-size: 14px; letter-spacing: 0.5em; }
+      #frame { font-size: 10px; }
+      #player { font-size: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="stage" class="enter-start">
+    <pre id="banner" aria-label="LUSTSTAR"></pre>
+    <div id="banner-mobile" aria-hidden="true">LUSTSTAR</div>
+
+    <div id="frame">
+      <span class="line" id="line-top"></span>
+      <span class="line" id="line-tracks"></span>
+      <span class="line" id="line-bottom"></span>
+    </div>
+
+    <div id="player">
+      <span class="row controls-row" id="player-controls-row"></span>
+      <span class="row now-playing" id="player-now-playing"></span>
+      <span class="row" id="player-progress"></span>
+    </div>
+  </div>
+
+  <a id="back" href="/" class="enter-start">&#60;- back</a>
+
+  <audio id="audio"></audio>
+
+  <script>
+    // ============================================================
+    // ELEMENT REFERENCES (grab everything upfront)
+    // ============================================================
+    const audio            = document.getElementById('audio');
+    const bannerEl         = document.getElementById('banner');
+    const bannerMobileEl   = document.getElementById('banner-mobile');
+    const stageEl          = document.getElementById('stage');
+    const backEl           = document.getElementById('back');
+    const lineTop          = document.getElementById('line-top');
+    const lineTracks       = document.getElementById('line-tracks');
+    const lineBottom       = document.getElementById('line-bottom');
+    const controlsRowEl    = document.getElementById('player-controls-row');
+    const nowPlayingEl     = document.getElementById('player-now-playing');
+    const progressEl       = document.getElementById('player-progress');
+
+    // ============================================================
+    // LUSTSTAR ASCII BANNER (desktop)
+    // ============================================================
+    const BANNER_LINES = [
+      '██╗     ██╗   ██╗███████╗████████╗███████╗████████╗ █████╗ ██████╗ ',
+      '██║     ██║   ██║██╔════╝╚══██╔══╝██╔════╝╚══██╔══╝██╔══██╗██╔══██╗',
+      '██║     ██║   ██║███████╗   ██║   ███████╗   ██║   ███████║██████╔╝',
+      '██║     ██║   ██║╚════██║   ██║   ╚════██║   ██║   ██╔══██║██╔══██╗',
+      '███████╗╚██████╔╝███████║   ██║   ███████║   ██║   ██║  ██║██║  ██║',
+      '╚══════╝ ╚═════╝ ╚══════╝   ╚═╝   ╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝'
+    ];
+
+    // ============================================================
+    // TRACK LIST
+    // ============================================================
+    const TRACKS = [
+      { name: 'lifeless_2023',     file: 'audio/track01.mp3' },
+      { name: 'insane_2025',       file: 'audio/track02.mp3' },
+      { name: 'larp_extended2024', file: 'audio/track03.mp3' },
+      { name: 'toxicsnippet_2025', file: 'audio/track04.mp3' }
+    ];
+
+    // ============================================================
+    // BUILD THE FRAME
+    // ============================================================
+    const PAD = 2;
+    const ARROW = '> ';
+    const ROW_PAD = 3;
+
+    const longestName = TRACKS.reduce((max, t) => Math.max(max, t.name.length), 0);
+    const rowWidth = ARROW.length + ROW_PAD + longestName + ROW_PAD;
+    const middleLen = 2 + 2 * PAD + rowWidth;
+    const innerWidth = middleLen - 2;
+    const BORDER = '+' + '-'.repeat(innerWidth) + '+';
+
+    lineTop.textContent = BORDER;
+    lineBottom.textContent = BORDER;
+
+    const trackEls = [];
+    (function buildTrackRows() {
+      lineTracks.textContent = '';
+      TRACKS.forEach((track, idx) => {
+        const row = document.createElement('span');
+        row.className = 'line';
+        row.style.display = 'block';
+        row.style.whiteSpace = 'pre';
+
+        row.appendChild(document.createTextNode('|' + ' '.repeat(PAD)));
+        row.appendChild(document.createTextNode(ARROW));
+
+        const t = document.createElement('span');
+        t.className = 'track';
+        t.dataset.index = idx;
+        t.dataset.name = track.name;
+        t.setAttribute('role', 'button');
+        t.tabIndex = 0;
+        t.setAttribute('aria-label', 'Play ' + track.name);
+
+        const padded = track.name + ' '.repeat(longestName - track.name.length);
+        t.textContent = padded;
+
+        row.appendChild(t);
+        row.appendChild(document.createTextNode(' '.repeat(ROW_PAD + PAD) + '|'));
+
+        lineTracks.appendChild(row);
+        trackEls.push(t);
+      });
+    })();
+
+    // ============================================================
+    // PLAYER UI
+    // ============================================================
+    (function buildControls() {
+      controlsRowEl.textContent = '';
+
+      const prev = document.createElement('span');
+      prev.className = 'ctrl';
+      prev.id = 'ctrl-prev';
+      prev.setAttribute('role', 'button');
+      prev.tabIndex = 0;
+      prev.textContent = '[ ◀◀ ]';
+      prev.setAttribute('aria-label', 'Previous track');
+
+      const play = document.createElement('span');
+      play.className = 'ctrl';
+      play.id = 'ctrl-play';
+      play.setAttribute('role', 'button');
+      play.tabIndex = 0;
+      play.textContent = '[ ▶ ]';
+      play.setAttribute('aria-label', 'Play or pause');
+
+      const next = document.createElement('span');
+      next.className = 'ctrl';
+      next.id = 'ctrl-next';
+      next.setAttribute('role', 'button');
+      next.tabIndex = 0;
+      next.textContent = '[ ▶▶ ]';
+      next.setAttribute('aria-label', 'Next track');
+
+      controlsRowEl.appendChild(prev);
+      controlsRowEl.appendChild(document.createTextNode(' '));
+      controlsRowEl.appendChild(play);
+      controlsRowEl.appendChild(document.createTextNode(' '));
+      controlsRowEl.appendChild(next);
+    })();
+
+    const ctrlPrev = document.getElementById('ctrl-prev');
+    const ctrlPlay = document.getElementById('ctrl-play');
+    const ctrlNext = document.getElementById('ctrl-next');
+
+    // ============================================================
+    // STATE
+    // ============================================================
+    let currentIndex = -1;
+    let playing = false;
+    const BAR_WIDTH = 24;
+
+    // ============================================================
+    // HELPERS
+    // ============================================================
+    function fmtTime(sec) {
+      if (!isFinite(sec) || sec < 0) sec = 0;
+      const m = Math.floor(sec / 60);
+      const s = Math.floor(sec % 60);
+      return (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+    }
+
+    function renderProgress() {
+      const dur = audio.duration;
+      const cur = audio.currentTime;
+      const pct = (isFinite(dur) && dur > 0) ? cur / dur : 0;
+      const filled = Math.round(pct * BAR_WIDTH);
+      const empty = BAR_WIDTH - filled;
+
+      const fillStr  = '█'.repeat(filled);
+      const emptyStr = '░'.repeat(empty);
+      const timeStr  = fmtTime(cur) + ' / ' + fmtTime(dur);
+
+      progressEl.innerHTML =
+        '<span class="bar" id="progress-bar">' +
+          '[<span class="fill">' + fillStr + '</span>' +
+          '<span class="empty">' + emptyStr + '</span>]' +
+        '</span> ' + timeStr;
+    }
+
+    function renderNowPlaying() {
+      nowPlayingEl.textContent = currentIndex === -1 ? '' : TRACKS[currentIndex].name;
+    }
+
+    function renderControls() {
+      ctrlPlay.textContent = playing ? '[ ■ ]' : '[ ▶ ]';
+    }
+
+    function updateBannerGlow() {
+      if (bannerEl)       bannerEl.classList.toggle('glowing', playing);
+      if (bannerMobileEl) bannerMobileEl.classList.toggle('glowing', playing);
+    }
+
+    function renderAll() {
+      renderControls();
+      renderNowPlaying();
+      renderProgress();
+      trackEls.forEach((el, i) => {
+        el.classList.toggle('playing', i === currentIndex && playing);
+      });
+      updateBannerGlow();
+    }
+
+    let tickTimer = null;
+    function startTicker() {
+      stopTicker();
+      tickTimer = setInterval(renderProgress, 250);
+    }
+    function stopTicker() {
+      if (tickTimer) { clearInterval(tickTimer); tickTimer = null; }
+    }
+
+    // ============================================================
+    // PLAYBACK
+    // ============================================================
+    function playTrack(index) {
+      if (index < 0 || index >= TRACKS.length) return;
+
+      if (index === currentIndex && playing) {
+        audio.pause();
+        playing = false;
+        stopTicker();
+        renderAll();
+        return;
+      }
+
+      if (index === currentIndex && !playing) {
+        audio.play().then(() => {
+          playing = true;
+          startTicker();
+          renderAll();
+        }).catch((err) => console.warn('Playback failed:', err));
+        return;
+      }
+
+      currentIndex = index;
+      audio.src = TRACKS[index].file;
+      audio.play().then(() => {
+        playing = true;
+        startTicker();
+        renderAll();
+      }).catch((err) => {
+        console.warn('Playback failed:', err);
+        playing = false;
+        renderAll();
+      });
+    }
+
+    function prevTrack() {
+      if (currentIndex === -1) return;
+      const idx = currentIndex > 0 ? currentIndex - 1 : TRACKS.length - 1;
+      playTrack(idx);
+    }
+
+    function nextTrack() {
+      if (currentIndex === -1) { playTrack(0); return; }
+      const idx = currentIndex < TRACKS.length - 1 ? currentIndex + 1 : 0;
+      playTrack(idx);
+    }
+
+    // ============================================================
+    // EVENT WIRING
+    // ============================================================
+    trackEls.forEach((el) => {
+      el.addEventListener('click', () => playTrack(parseInt(el.dataset.index, 10)));
+      el.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          playTrack(parseInt(el.dataset.index, 10));
+        }
+      });
+    });
+
+    ctrlPlay.addEventListener('click', () => {
+      if (currentIndex === -1) playTrack(0);
+      else playTrack(currentIndex);
+    });
+    ctrlPrev.addEventListener('click', prevTrack);
+    ctrlNext.addEventListener('click', nextTrack);
+
+    [ctrlPlay, ctrlPrev, ctrlNext].forEach((el) => {
+      el.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          el.click();
+        }
+      });
+    });
+
+    progressEl.addEventListener('click', (e) => {
+      const bar = document.getElementById('progress-bar');
+      if (!bar) return;
+      const rect = bar.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width;
+      const clamped = Math.max(0, Math.min(1, x));
+      if (isFinite(audio.duration)) {
+        audio.currentTime = clamped * audio.duration;
+        renderProgress();
+      }
+    });
+
+    audio.addEventListener('play', () => {
+      playing = true;
+      startTicker();
+      renderAll();
+    });
+    audio.addEventListener('pause', () => {
+      playing = false;
+      stopTicker();
+      renderAll();
+    });
+    audio.addEventListener('ended', () => {
+      playing = false;
+      stopTicker();
+      if (currentIndex < TRACKS.length - 1) playTrack(currentIndex + 1);
+      else renderAll();
+    });
+    audio.addEventListener('loadedmetadata', renderProgress);
+    audio.addEventListener('timeupdate', renderProgress);
+
+    // ============================================================
+    // LUSTSTAR BANNER ANIMATION
+    // ============================================================
+    function isDesktopBannerVisible() {
+      return window.matchMedia('(min-width: 701px)').matches;
+    }
+
+    // Printer-style: row by row, left to right
+    function typeBannerDesktop(onDone) {
+      bannerEl.textContent = '';
+      const CHAR_SPEED = 4;
+      let row = 0;
+      let col = 0;
+
+      function step() {
+        if (row >= BANNER_LINES.length) {
+          if (onDone) onDone();
+          return;
+        }
+        const line = BANNER_LINES[row];
+        if (col < line.length) {
+          col++;
+          const partial = BANNER_LINES.slice(0, row).join('\n') +
+                          (row > 0 ? '\n' : '') +
+                          line.slice(0, col);
+          bannerEl.textContent = partial;
+          setTimeout(step, CHAR_SPEED);
+        } else {
+          row++;
+          col = 0;
+          setTimeout(step, 30);
+        }
+      }
+      step();
+    }
+
+    function showMobileBanner() {
+      bannerMobileEl.classList.add('visible');
+    }
+
+    // ============================================================
+    // INITIAL RENDER + ENTRY ANIMATION
+    // ============================================================
+    renderAll();
+
+    // Stage drops in
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        stageEl.classList.remove('enter-start');
+        backEl.classList.remove('enter-start');
+      });
+    });
+
+    // After stage drop settles, start banner animation
+    setTimeout(() => {
+      if (isDesktopBannerVisible()) {
+        typeBannerDesktop();
+      } else {
+        showMobileBanner();
+      }
+    }, 500);
+
+    // ============================================================
+    // EXIT ANIMATION (back link)
+    // ============================================================
+    let leaving = false;
+    backEl.addEventListener('click', (e) => {
+      if (leaving) return;
+      leaving = true;
+      e.preventDefault();
+      stageEl.classList.add('exit');
+      backEl.classList.add('exit');
+      setTimeout(() => {
+        window.location.href = backEl.getAttribute('href');
+      }, 450);
+    });
+  </script>
+
+</body>
+</html>
