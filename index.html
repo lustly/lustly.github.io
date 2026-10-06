@@ -24,19 +24,19 @@
       overscroll-behavior: none;
     }
 
-    /* Bottom gradient so the frame is readable over the busy GIF */
+    /* Lighter bottom gradient — just enough to lift the frame */
     body::after {
       content: '';
       position: fixed;
       left: 0;
       right: 0;
       bottom: 0;
-      height: 45vh;
+      height: 32vh;
       background: linear-gradient(
         to top,
-        rgba(0, 0, 0, 0.92) 0%,
-        rgba(0, 0, 0, 0.7) 35%,
-        rgba(0, 0, 0, 0.25) 70%,
+        rgba(0, 0, 0, 0.72) 0%,
+        rgba(0, 0, 0, 0.4) 40%,
+        rgba(0, 0, 0, 0.1) 75%,
         transparent 100%
       );
       pointer-events: none;
@@ -120,7 +120,7 @@
     @media (max-width: 700px) {
       html, body { background-size: 110% auto; }
 
-      body::after { height: 50vh; }
+      body::after { height: 38vh; }
 
       #frame { font-size: 12px; }
 
@@ -152,9 +152,6 @@
   <audio id="music" loop src="audio/Music.mp3"></audio>
 
   <script>
-    // ============================================================
-    // CONFIG
-    // ============================================================
     const TYPE_SPEED = 150;
     const BORDER_SPEED = 25;
     const DELETE_SPEED = 45;
@@ -172,16 +169,10 @@
       { text: 'email',   href: null }
     ];
 
-    // ============================================================
-    // ELEMENTS
-    // ============================================================
     const lineTop    = document.getElementById('line-top');
     const lineMid    = document.getElementById('line-mid');
     const lineBottom = document.getElementById('line-bottom');
 
-    // ============================================================
-    // BORDER
-    // ============================================================
     function computeBorder() {
       let inner = 0;
       LINK_ITEMS.forEach((spec, idx) => {
@@ -194,9 +185,6 @@
     }
     const BORDER = computeBorder();
 
-    // ============================================================
-    // BUILD MIDDLE ROW
-    // ============================================================
     const itemEls = [];
 
     (function buildMidRow() {
@@ -243,9 +231,6 @@
       lineMid.appendChild(document.createTextNode(' '.repeat(PAD) + '|'));
     })();
 
-    // ============================================================
-    // TYPING HELPERS
-    // ============================================================
     function typeStringInto(el, str, speed, onDone) {
       el.textContent = '';
       let i = 0;
@@ -285,9 +270,6 @@
       })();
     }
 
-    // ============================================================
-    // LINK SEQUENCE
-    // ============================================================
     function typeSequence(index) {
       if (index >= itemEls.length) {
         startMusicSequence();
@@ -306,9 +288,6 @@
       });
     }
 
-    // ============================================================
-    // EMAIL CLICK
-    // ============================================================
     const emailItem = itemEls.find(i => i.isEmail);
     let emailBusy = false;
 
@@ -365,9 +344,6 @@
       }
     });
 
-    // ============================================================
-    // MUSIC TOGGLE
-    // ============================================================
     const music = document.getElementById('music');
     const musicToggle = document.getElementById('music-toggle');
     const musicText = document.getElementById('music-text');
@@ -464,9 +440,6 @@
     music.addEventListener('play',  resyncLabelToAudio);
     music.addEventListener('pause', resyncLabelToAudio);
 
-    // ============================================================
-    // KICK OFF
-    // ============================================================
     typeStringInto(lineTop, BORDER, BORDER_SPEED, () => {
       setTimeout(() => typeSequence(0), 150);
     });
