@@ -14,10 +14,47 @@
       min-height: 100vh;
       min-height: 100dvh;
       background-color: #000;
+      background-image: url('../img/how2.gif');
+      background-repeat: repeat;
+      background-position: center center;
+      background-size: 130% auto;
       font-family: "Courier New", Courier, monospace;
       color: #fff;
-      overflow-x: hidden;
+      overflow: hidden;
       overscroll-behavior: none;
+    }
+
+    /* Bottom gradient so the frame is readable over the GIF */
+    body::after {
+      content: '';
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 40vh;
+      background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.85) 0%,
+        rgba(0, 0, 0, 0.55) 40%,
+        rgba(0, 0, 0, 0.15) 75%,
+        transparent 100%
+      );
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Full-screen black overlay for page transitions */
+    #transition-overlay {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      z-index: 9000;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+    #transition-overlay.active {
+      opacity: 1;
     }
 
     body {
@@ -26,6 +63,7 @@
       justify-content: center;
       padding: 80px 20px;
       box-sizing: border-box;
+      position: relative;
     }
 
     #stage {
@@ -33,11 +71,9 @@
       flex-direction: column;
       align-items: center;
       transition: opacity 0.4s ease, transform 0.4s ease;
-    }
-
-    #stage.enter-start {
-      opacity: 0;
-      transform: translateY(-30px) scale(0.95);
+      position: relative;
+      z-index: 10;
+      text-shadow: 0 0 4px #000, 0 0 8px #000;
     }
 
     #stage.exit {
@@ -58,7 +94,6 @@
       transition: text-shadow 0.4s ease;
       text-shadow: 0 0 4px #000, 0 0 8px #000;
     }
-
     #banner.glowing {
       text-shadow:
         0 0 6px rgba(255, 255, 255, 0.85),
@@ -82,9 +117,7 @@
       transition: opacity 0.8s ease, text-shadow 0.4s ease;
       text-shadow: 0 0 4px #000, 0 0 8px #000;
     }
-
     #banner-mobile.visible { opacity: 1; }
-
     #banner-mobile.glowing {
       text-shadow:
         0 0 6px rgba(255, 255, 255, 0.85),
@@ -104,11 +137,10 @@
       -webkit-user-select: none;
       max-width: 100%;
     }
-
     #frame .line { display: block; white-space: pre; }
 
     .track {
-      color: rgba(255, 255, 255, 0.85);
+      color: rgba(255, 255, 255, 0.9);
       cursor: pointer;
       user-select: none;
       -webkit-user-select: none;
@@ -118,12 +150,12 @@
     .track:hover,
     .track:focus {
       color: #fff;
-      text-shadow: 0 0 6px rgba(255, 255, 255, 0.6);
+      text-shadow: 0 0 6px rgba(255, 255, 255, 0.7), 0 0 4px #000;
       outline: none;
     }
     .track.playing {
       color: #fff;
-      text-shadow: 0 0 8px rgba(255, 255, 255, 0.85);
+      text-shadow: 0 0 8px rgba(255, 255, 255, 0.9), 0 0 4px #000;
     }
 
     #player {
@@ -131,7 +163,7 @@
       font-family: "Courier New", Courier, monospace;
       font-size: 14px;
       line-height: 1.6;
-      color: rgba(255, 255, 255, 0.85);
+      color: rgba(255, 255, 255, 0.9);
       text-align: center;
       user-select: none;
       -webkit-user-select: none;
@@ -148,7 +180,7 @@
     #player .ctrl:hover,
     #player .ctrl:focus {
       color: #fff;
-      text-shadow: 0 0 6px rgba(255, 255, 255, 0.6);
+      text-shadow: 0 0 6px rgba(255, 255, 255, 0.7), 0 0 4px #000;
       outline: none;
     }
     #player .now-playing { color: #fff; opacity: 0.9; margin-bottom: 4px; }
@@ -162,25 +194,27 @@
       left: 20px;
       font-family: "Courier New", Courier, monospace;
       font-size: 14px;
-      color: rgba(255, 255, 255, 0.7);
+      color: rgba(255, 255, 255, 0.85);
       text-decoration: none;
       transition: color 0.15s ease, text-shadow 0.15s ease, opacity 0.4s ease;
       z-index: 10;
       user-select: none;
       -webkit-user-select: none;
+      text-shadow: 0 0 4px #000, 0 0 8px #000;
     }
     #back:hover,
     #back:focus {
       color: #fff;
-      text-shadow: 0 0 6px rgba(255, 255, 255, 0.6);
+      text-shadow: 0 0 6px rgba(255, 255, 255, 0.7), 0 0 4px #000;
       outline: none;
     }
-    #back.enter-start { opacity: 0; }
     #back.exit { opacity: 0; }
 
     audio { display: none; }
 
     @media (max-width: 700px) {
+      html, body { background-size: 110% auto; }
+      body::after { height: 45vh; }
       #banner { display: none; }
       #banner-mobile { display: block; font-size: 16px; }
       #frame { font-size: 11px; }
@@ -196,7 +230,9 @@
 </head>
 <body>
 
-  <div id="stage" class="enter-start">
+  <div id="transition-overlay"></div>
+
+  <div id="stage">
     <pre id="banner" aria-label="LUSTSTAR"></pre>
     <div id="banner-mobile" aria-hidden="true">LUSTSTAR</div>
 
@@ -213,13 +249,13 @@
     </div>
   </div>
 
-  <a id="back" href="/" class="enter-start">&#60;- back</a>
+  <a id="back" href="/">&#60;- back</a>
 
   <audio id="audio"></audio>
 
   <script>
     // ============================================================
-    // ELEMENT REFERENCES (grab everything upfront)
+    // ELEMENT REFERENCES (all up front)
     // ============================================================
     const audio            = document.getElementById('audio');
     const bannerEl         = document.getElementById('banner');
@@ -232,9 +268,10 @@
     const controlsRowEl    = document.getElementById('player-controls-row');
     const nowPlayingEl     = document.getElementById('player-now-playing');
     const progressEl       = document.getElementById('player-progress');
+    const overlay          = document.getElementById('transition-overlay');
 
     // ============================================================
-    // LUSTSTAR ASCII BANNER (desktop)
+    // LUSTSTAR ASCII BANNER
     // ============================================================
     const BANNER_LINES = [
       '██╗     ██╗   ██╗███████╗████████╗███████╗████████╗ █████╗ ██████╗ ',
@@ -256,7 +293,7 @@
     ];
 
     // ============================================================
-    // BUILD THE FRAME
+    // BUILD FRAME
     // ============================================================
     const PAD = 2;
     const ARROW = '> ';
@@ -303,32 +340,26 @@
     })();
 
     // ============================================================
-    // PLAYER UI
+    // PLAYER
     // ============================================================
     (function buildControls() {
       controlsRowEl.textContent = '';
 
       const prev = document.createElement('span');
-      prev.className = 'ctrl';
-      prev.id = 'ctrl-prev';
-      prev.setAttribute('role', 'button');
-      prev.tabIndex = 0;
+      prev.className = 'ctrl'; prev.id = 'ctrl-prev';
+      prev.setAttribute('role', 'button'); prev.tabIndex = 0;
       prev.textContent = '[ ◀◀ ]';
       prev.setAttribute('aria-label', 'Previous track');
 
       const play = document.createElement('span');
-      play.className = 'ctrl';
-      play.id = 'ctrl-play';
-      play.setAttribute('role', 'button');
-      play.tabIndex = 0;
+      play.className = 'ctrl'; play.id = 'ctrl-play';
+      play.setAttribute('role', 'button'); play.tabIndex = 0;
       play.textContent = '[ ▶ ]';
       play.setAttribute('aria-label', 'Play or pause');
 
       const next = document.createElement('span');
-      next.className = 'ctrl';
-      next.id = 'ctrl-next';
-      next.setAttribute('role', 'button');
-      next.tabIndex = 0;
+      next.className = 'ctrl'; next.id = 'ctrl-next';
+      next.setAttribute('role', 'button'); next.tabIndex = 0;
       next.textContent = '[ ▶▶ ]';
       next.setAttribute('aria-label', 'Next track');
 
@@ -344,15 +375,12 @@
     const ctrlNext = document.getElementById('ctrl-next');
 
     // ============================================================
-    // STATE
+    // STATE + HELPERS
     // ============================================================
     let currentIndex = -1;
     let playing = false;
     const BAR_WIDTH = 24;
 
-    // ============================================================
-    // HELPERS
-    // ============================================================
     function fmtTime(sec) {
       if (!isFinite(sec) || sec < 0) sec = 0;
       const m = Math.floor(sec / 60);
@@ -366,7 +394,6 @@
       const pct = (isFinite(dur) && dur > 0) ? cur / dur : 0;
       const filled = Math.round(pct * BAR_WIDTH);
       const empty = BAR_WIDTH - filled;
-
       const fillStr  = '█'.repeat(filled);
       const emptyStr = '░'.repeat(empty);
       const timeStr  = fmtTime(cur) + ' / ' + fmtTime(dur);
@@ -500,18 +527,13 @@
     });
 
     audio.addEventListener('play', () => {
-      playing = true;
-      startTicker();
-      renderAll();
+      playing = true; startTicker(); renderAll();
     });
     audio.addEventListener('pause', () => {
-      playing = false;
-      stopTicker();
-      renderAll();
+      playing = false; stopTicker(); renderAll();
     });
     audio.addEventListener('ended', () => {
-      playing = false;
-      stopTicker();
+      playing = false; stopTicker();
       if (currentIndex < TRACKS.length - 1) playTrack(currentIndex + 1);
       else renderAll();
     });
@@ -519,13 +541,12 @@
     audio.addEventListener('timeupdate', renderProgress);
 
     // ============================================================
-    // LUSTSTAR BANNER ANIMATION
+    // BANNER ANIMATION
     // ============================================================
     function isDesktopBannerVisible() {
       return window.matchMedia('(min-width: 701px)').matches;
     }
 
-    // Printer-style: row by row, left to right
     function typeBannerDesktop(onDone) {
       bannerEl.textContent = '';
       const CHAR_SPEED = 4;
@@ -559,19 +580,12 @@
     }
 
     // ============================================================
-    // INITIAL RENDER + ENTRY ANIMATION
+    // INITIAL RENDER
     // ============================================================
     renderAll();
 
-    // Stage drops in
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        stageEl.classList.remove('enter-start');
-        backEl.classList.remove('enter-start');
-      });
-    });
-
-    // After stage drop settles, start banner animation
+    // Stage comes in visible (overlay handles the fade)
+    // Start the banner animation shortly after load
     setTimeout(() => {
       if (isDesktopBannerVisible()) {
         typeBannerDesktop();
@@ -581,7 +595,19 @@
     }, 500);
 
     // ============================================================
-    // EXIT ANIMATION (back link)
+    // ENTRY: fade overlay out on load
+    // ============================================================
+    overlay.style.transition = 'none';
+    overlay.classList.add('active');
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        overlay.style.transition = '';
+        overlay.classList.remove('active');
+      });
+    });
+
+    // ============================================================
+    // EXIT: back link with fade
     // ============================================================
     let leaving = false;
     backEl.addEventListener('click', (e) => {
@@ -590,6 +616,7 @@
       e.preventDefault();
       stageEl.classList.add('exit');
       backEl.classList.add('exit');
+      overlay.classList.add('active');
       setTimeout(() => {
         window.location.href = backEl.getAttribute('href');
       }, 450);
